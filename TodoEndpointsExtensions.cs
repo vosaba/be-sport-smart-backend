@@ -7,7 +7,7 @@ namespace SimpleTodo.Api
         public static RouteGroupBuilder MapTodoApi(this RouteGroupBuilder group)
         {
             group.MapGet("/", GetLists);
-            group.MapGet("/ddd", GetLists);
+            group.MapGet("/testapi1", GetLists);
             group.MapPost("/", CreateList);
             group.MapGet("/{listId}", GetList);
             group.MapPut("/{listId}", UpdateList);
