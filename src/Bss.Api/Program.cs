@@ -1,0 +1,151 @@
+using Bss.Api.Data;
+using Bss.Api.Data.Models;
+using Bss.Api.Data.Repositories;
+using Bss.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+});
+
+builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+
+
+//mongodb://cosmos-mtkzzjzjodk3z:RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==@cosmos-mtkzzjzjodk3z.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosmos-mtkzzjzjodk3z@
+
+builder.Services.AddDbContext<IBeSportSmartDbContext, Bss.Api.Data.BeSportSmartDbContext>(options =>
+{
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //options.UseCosmos(
+    //    "https://cosmos-mtkzzjzjodk3z.documents.azure.com:443/",
+    //    "RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==",
+    //    //connectionString: "mongodb://cosmos-mtkzzjzjodk3z:RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==@cosmos-mtkzzjzjodk3z.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosmos-mtkzzjzjodk3z@",
+    //    databaseName: "TestDB");
+
+    //options.UseNpgsql(
+    //    "Server=psql-mtkzzjzjodk3z.postgres.database.azure.com;Database=BeSportSmart;Port=5432;User Id=kW4w63XtPOyoYjGe@psql-mtkzzjzjodk3z;Password=DuI(<U{QukIx:EA(;Ssl Mode=Require;",
+    //    options => options.SetPostgresVersion(new Version(11, 8)));
+    options.UseNpgsql(
+        builder.Configuration["ConnectionStrings:DefaultConnection"],
+        options => options.SetPostgresVersion(new Version(11, 8)));
+});
+
+builder.Services.AddScoped<IRepository>(x => x.GetService<BeSportSmartDbContext>() ?? throw new NullReferenceException(nameof(BeSportSmartDbContext)));
+builder.Services.AddScoped<IPortfolioRepository>(x => x.GetService<BeSportSmartDbContext>() ?? throw new NullReferenceException(nameof(BeSportSmartDbContext)));
+builder.Services.AddScoped<IInputRepository>(x => x.GetService<BeSportSmartDbContext>() ?? throw new NullReferenceException(nameof(BeSportSmartDbContext)));
+builder.Services.AddScoped<IScoreProviderRepository>(x => x.GetService<BeSportSmartDbContext>() ?? throw new NullReferenceException(nameof(BeSportSmartDbContext)));
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 12;
+})
+.AddEntityFrameworkStores<BeSportSmartDbContext>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+    options.DefaultChallengeScheme =
+    options.DefaultForbidScheme =
+    options.DefaultScheme =
+    options.DefaultSignInScheme =
+    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+        )
+    };
+});
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IFMPService, FMPService>();
+builder.Services.AddScoped<IFormulaService, FormulaService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+builder.Services.AddSingleton<IEvaluationEngine, EvaluationEngine>();
+
+builder.Services.AddHttpClient<IFMPService, FMPService>();
+
+builder.Services.AddMemoryCache();
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseCors(x => x
+     .AllowAnyMethod()
+     .AllowAnyHeader()
+     .AllowCredentials()
+      //.WithOrigins("https://localhost:44351))
+      .SetIsOriginAllowed(origin => true));
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
