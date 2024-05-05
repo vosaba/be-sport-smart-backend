@@ -13,6 +13,8 @@ namespace Bss.Api.Dtos.ScoreProvider
 
         [Required]
         public string Formula { get; set; } = string.Empty;
+
+        public bool Disabled { get; set; }
         /* 
             () => { 
                 return measures.absolute_bmi() + parameters.kick;

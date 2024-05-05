@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "BeSportSmart API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -55,21 +55,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-
-//mongodb://cosmos-mtkzzjzjodk3z:RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==@cosmos-mtkzzjzjodk3z.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosmos-mtkzzjzjodk3z@
-
-builder.Services.AddDbContext<IBeSportSmartDbContext, Bss.Api.Data.BeSportSmartDbContext>(options =>
+builder.Services.AddDbContext<IBeSportSmartDbContext, BeSportSmartDbContext>(options =>
 {
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    //options.UseCosmos(
-    //    "https://cosmos-mtkzzjzjodk3z.documents.azure.com:443/",
-    //    "RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==",
-    //    //connectionString: "mongodb://cosmos-mtkzzjzjodk3z:RspQhkQMdXbtPYOrT3qDJZS7DNqR3XSwTJEoCCyli16veJWiOSjD9e88D0g9UX5HEDq4Z52JJEmPACDbIwWCFQ==@cosmos-mtkzzjzjodk3z.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosmos-mtkzzjzjodk3z@",
-    //    databaseName: "TestDB");
-
-    //options.UseNpgsql(
-    //    "Server=psql-mtkzzjzjodk3z.postgres.database.azure.com;Database=BeSportSmart;Port=5432;User Id=kW4w63XtPOyoYjGe@psql-mtkzzjzjodk3z;Password=DuI(<U{QukIx:EA(;Ssl Mode=Require;",
-    //    options => options.SetPostgresVersion(new Version(11, 8)));
     options.UseNpgsql(
         builder.Configuration["ConnectionStrings:DefaultConnection"],
         options => options.SetPostgresVersion(new Version(11, 8)));
@@ -127,7 +114,7 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (true || app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

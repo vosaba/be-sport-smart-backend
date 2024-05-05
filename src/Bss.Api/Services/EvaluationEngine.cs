@@ -8,18 +8,15 @@ namespace Bss.Api.Services
 {
     public interface IEvaluationEngine : IDisposable
     {
+        public bool Initialized { get; }
         public Task<double> GetScore(string formula, IDictionary<string, string> inputs);
-        public void RefreshContext(params ScoreProvider[] scoreProviders);
+        public void RefreshContext(ICollection<ScoreProvider> measures, ICollection<ScoreProvider> scores);
     }
 
     public class EvaluationEngine : IEvaluationEngine
     {
         private readonly Engine _engine = new Engine();
-
-        public EvaluationEngine()
-        {
-            _engine.Execute("var internal_context = { measures: {} };");
-        }
+        public bool Initialized { get; private set; }
 
         public void Dispose()
         {
@@ -33,7 +30,7 @@ namespace Bss.Api.Services
                 {{ 
                     var inputs = {inputString};
                     var formula = {formula};
-                    var context = {{ inputs, measures: internal_context.measures }};
+                    var context = {{ inputs, measures: internal_context.measures, scores: internal_context.scores }};
                     return formula(context); 
                 }})();";
 
@@ -42,19 +39,33 @@ namespace Bss.Api.Services
             return Task.FromResult(score);   
         }
 
-        public void RefreshContext(params ScoreProvider[] scoreProviders)
+        public void RefreshContext(ICollection<ScoreProvider> measures, ICollection<ScoreProvider> scores)
         {
             ClearContext();
 
-            foreach (var scoreProvider in scoreProviders)
+            foreach (var scoreProvider in measures)
             {
                 _engine.Execute($"internal_context.measures['{scoreProvider.Name}'] = {scoreProvider.Formula};");
             }
+
+            foreach (var scoreProvider in scores)
+            {
+                _engine.Execute($"internal_context.scores['{scoreProvider.Name}'] = {scoreProvider.Formula};");
+            }
+
+            Initialized = true;
         }
 
         private void ClearContext()
         {
-            _engine.Execute("internal_context = { measures: {} };");
+            if (!Initialized)
+            {
+                _engine.Execute("var internal_context = { measures: {}, scores: {} };");
+            }
+            else
+            {
+                _engine.Execute("internal_context = { measures: {}, scores: {} };");
+            }
         }
     }
 }

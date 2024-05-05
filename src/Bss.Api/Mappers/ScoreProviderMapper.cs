@@ -11,7 +11,19 @@ namespace Bss.Api.Mappers
             {
                 Type = scoreProvider.Type,
                 Name = scoreProvider.Name,
+                Disabled = scoreProvider.Disabled,
                 Formula = scoreProvider.Formula,
+            };
+        }
+
+        public static ScoreProviderListItemDto ToScoreProviderListItemDto(this ScoreProvider scoreProvider)
+        {
+            return new ScoreProviderListItemDto
+            {
+                Type = scoreProvider.Type,
+                Name = scoreProvider.Name,
+                Disabled = scoreProvider.Disabled,
+                DependentOnProviders = scoreProvider.DependentProviders,
             };
         }
     }

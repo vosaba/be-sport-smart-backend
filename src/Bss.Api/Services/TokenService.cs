@@ -8,7 +8,7 @@ namespace Bss.Api.Services
 {
     public interface ITokenService
     {
-        string CreateToken(AppUser user);
+        string CreateToken(AppUser user, IEnumerable<string> roles);
     }
 
     public class TokenService : ITokenService
@@ -21,13 +21,18 @@ namespace Bss.Api.Services
             _config = config;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
         }
-        public string CreateToken(AppUser user)
+        public string CreateToken(AppUser user, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

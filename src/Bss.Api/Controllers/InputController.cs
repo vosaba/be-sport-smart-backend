@@ -2,18 +2,24 @@ using Bss.Api.Data.Models;
 using Bss.Api.Data.Repositories;
 using Bss.Api.Dtos.Input;
 using Bss.Api.Mappers;
+using Bss.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bss.Api.Controllers
 {
     [Route("api/input")]
+    [Authorize(Roles = "Trainer,Admin")]
     [ApiController]
     public class InputController : ControllerBase
     {
         private readonly IInputRepository _inputRepository;
-        public InputController(IInputRepository inputRepository)
+        private readonly IEvaluationService _evaluationService;
+
+        public InputController(IInputRepository inputRepository, IEvaluationService evaluationService)
         {
             _inputRepository = inputRepository;
+            _evaluationService = evaluationService;
         }
 
         [HttpGet("{name}")]
@@ -50,6 +56,8 @@ namespace Bss.Api.Controllers
 
             await _inputRepository.ApplyChanges();
 
+            await _evaluationService.RefreshContext();
+
             return Ok();
         }
 
@@ -70,6 +78,27 @@ namespace Bss.Api.Controllers
             _inputRepository.Remove(input);
 
             await _inputRepository.ApplyChanges();
+
+            return Ok();
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] InputDto input)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingInput = await _inputRepository.GetInput(input.Name);
+
+            if (existingInput == null)
+                return NotFound();
+
+            existingInput.Type = input.Type;
+            existingInput.Options = input.Options;
+
+            await _inputRepository.ApplyChanges();
+
+            await _evaluationService.RefreshContext();
 
             return Ok();
         }

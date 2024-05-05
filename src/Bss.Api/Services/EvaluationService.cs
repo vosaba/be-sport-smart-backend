@@ -16,6 +16,8 @@ namespace Bss.Api.Services
         Task<(bool isValid, string? error)> ValidateInputs(string scoreProvider, IDictionary<string, string> inputValues);
 
         Task<EvaluationResultDto> Evaluate(EvaluationRequestDto evaluationRequest);
+
+        Task RefreshContext();
     }
 
     public class EvaluationService : IEvaluationService
@@ -31,8 +33,6 @@ namespace Bss.Api.Services
             _dbContext = dbContext;
             _formulaService = formulaService;
             _evaluationEngine = evaluationEngine;
-
-            _evaluationEngine.RefreshContext(_dbContext.ScoreProviders.Where(x => x.Type == ScoreProviderType.Measure).ToArray());
         }
 
         public async Task<EvaluationResultDto> Evaluate(EvaluationRequestDto evaluationRequest)
@@ -42,6 +42,11 @@ namespace Bss.Api.Services
             if (!isValid)
             {
                 throw new InvalidOperationException($"Unable to evaluate, details: {error}");
+            }
+
+            if (!_evaluationEngine.Initialized)
+            {
+                await RefreshContext();
             }
 
             var cacheKey = $"formula:{evaluationRequest.Name}";
@@ -89,22 +94,34 @@ namespace Bss.Api.Services
                 if (measure == null)
                     return;
 
-                var (measures, inputs) = _formulaService.GetDependents(measure.Formula);
+                var (measures, scoreNames, inputs) = _formulaService.GetDependents(measure.Formula);
 
                 foreach (var input in inputs)
                 {
                     inputNames.Add(input);
                 }
 
-                foreach (var dependentMeasure in measures)
+                var dependentProviders = measures.Concat(scoreNames);
+
+                foreach (var dependentProvider in dependentProviders)
                 {
-                    await ProcessMeasure(dependentMeasure); // Recursively process dependent measures
+                    await ProcessMeasure(dependentProvider); // Recursively process dependent measures
                 }
             }
 
             await ProcessMeasure(scoreProvider);
 
             return _memoryCache.Set(cacheKey, inputNames.ToArray());
+        }
+
+        public async Task RefreshContext()
+        {
+            var measures = await _dbContext.ScoreProviders.Where(x => x.Type == ScoreProviderType.Measure).ToArrayAsync();
+            var scores = await _dbContext.ScoreProviders.Where(x => x.Type == ScoreProviderType.Score).ToArrayAsync();
+
+            _evaluationEngine.RefreshContext(measures, scores);
+
+            CLearCache();
         }
 
         public async Task<(bool isValid, string? error)> ValidateInputs(string scoreProvider, IDictionary<string, string> inputValues)
@@ -114,7 +131,7 @@ namespace Bss.Api.Services
             var missingInputs = requiredInputs.Except(inputValues.Keys);
             if (missingInputs.Any())
             {
-                return(false, $"Some inputs are missing: {string.Join(",", missingInputs)}");
+                return (false, $"Some inputs are missing: {string.Join(",", missingInputs)}");
             }
 
             var inputs = await GetInputs(inputValues.Keys);
@@ -158,7 +175,7 @@ namespace Bss.Api.Services
 
             foreach (var input in inputs)
             {
-                switch(input.Type)
+                switch (input.Type)
                 {
                     case InputType.String:
                         formattedValues[input.Name] = $"'{inputValues[input.Name]}'";
@@ -189,6 +206,14 @@ namespace Bss.Api.Services
             return allInputs
                     .Where(x => names.Contains(x.Name))
                     .ToList();
+        }
+
+        private void CLearCache()
+        {
+            if (_memoryCache is MemoryCache concreteMemoryCache)
+            {
+                concreteMemoryCache.Clear();
+            }
         }
     }
 }

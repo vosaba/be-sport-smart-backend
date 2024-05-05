@@ -17,13 +17,11 @@ namespace Bss.Api.Controllers
     {
         private readonly IEvaluationService _evaluationService;
         private readonly IBeSportSmartDbContext _dbContext;
-        private readonly IFormulaService _formulaService;
 
-        public EvaluationController(IEvaluationService evaluationService, IBeSportSmartDbContext dbContext, IFormulaService formulaService)
+        public EvaluationController(IEvaluationService evaluationService, IBeSportSmartDbContext dbContext)
         {
             _evaluationService = evaluationService;
             _dbContext = dbContext;
-            _formulaService = formulaService;
         }
 
         [HttpGet("getAll")]
@@ -33,12 +31,26 @@ namespace Bss.Api.Controllers
                 return BadRequest(ModelState);
 
             var names = await _dbContext.ScoreProviders
-                .Where(x => x.Type == ScoreProviderType.Sport)
+                .Where(x => x.Type == ScoreProviderType.Sport && !x.Disabled)
                 .Select(x => x.Name)
                 .ToListAsync();
 
             return Ok(names);
         }
+
+        //[HttpGet("getAllWithCovering")]
+        //public async Task<IActionResult> GetAllWithCovering()
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var names = await _dbContext.ScoreProviders
+        //        .Where(x => x.Type == ScoreProviderType.Sport && !x.Disabled)
+        //        .Select(x => x.Name)
+        //        .ToListAsync();
+
+        //    return Ok(names);
+        //}
 
         [HttpGet("getInputs/{name}")]
         public async Task<IActionResult> GetInputs([FromRoute] string name)
