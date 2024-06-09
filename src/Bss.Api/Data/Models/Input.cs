@@ -14,6 +14,6 @@
         public InputType Type { get; set; }
         public string[] Options { get; set; } = Array.Empty<string>();
 
-        public ICollection<ScoreProviderInput> ScoreProviderInputs { get; set; } = new List<ScoreProviderInput>();
+        //public ICollection<ScoreProviderInput> ScoreProviderInputs { get; set; } = new List<ScoreProviderInput>();
     }
 }

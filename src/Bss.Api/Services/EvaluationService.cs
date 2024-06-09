@@ -11,12 +11,12 @@ namespace Bss.Api.Services
 {
     public interface IEvaluationService
     {
+        Task<string[]> GetAllSports();
+        Task<IDictionary<string, string[]>> GetAllSportsWithCovering();
+        Task<string[]> GetCovering(string scoreProvider);
         Task<string[]> GetRequiredInputs(string scoreProvider);
-
         Task<(bool isValid, string? error)> ValidateInputs(string scoreProvider, IDictionary<string, string> inputValues);
-
         Task<EvaluationResultDto> Evaluate(EvaluationRequestDto evaluationRequest);
-
         Task RefreshContext();
     }
 
@@ -33,6 +33,21 @@ namespace Bss.Api.Services
             _dbContext = dbContext;
             _formulaService = formulaService;
             _evaluationEngine = evaluationEngine;
+        }
+
+        public async Task<string[]> GetAllSports()
+        {
+            var cacheKey = "all_sports";
+
+            if (_memoryCache.TryGetValue(cacheKey, out string[]? cachedSportNames))
+            {
+                return cachedSportNames!;
+            }
+
+            return _memoryCache.Set(cacheKey, await _dbContext.ScoreProviders
+                .Where(x => x.Type == ScoreProviderType.Sport && !x.Disabled)
+                .Select(x => x.Name)
+                .ToArrayAsync());
         }
 
         public async Task<EvaluationResultDto> Evaluate(EvaluationRequestDto evaluationRequest)
@@ -89,7 +104,7 @@ namespace Bss.Api.Services
 
                 visitedMeasures.Add(measureName);
 
-                var measure = await _dbContext.ScoreProviders.SingleOrDefaultAsync(x => x.Name == measureName);
+                var measure = await _dbContext.ScoreProviders.SingleOrDefaultAsync(x => x.Name == measureName && !x.Disabled);
 
                 if (measure == null)
                     return;
@@ -214,6 +229,71 @@ namespace Bss.Api.Services
             {
                 concreteMemoryCache.Clear();
             }
+        }
+
+        public async Task<IDictionary<string, string[]>> GetAllSportsWithCovering()
+        {
+            var cacheKey = "all_sports_with_covering";
+
+            if (_memoryCache.TryGetValue(cacheKey, out IDictionary<string, string[]>? cachedSportNamesWithCovering))
+            {
+                return cachedSportNamesWithCovering!;
+            }
+
+            var result = new Dictionary<string, string[]>();
+
+            foreach (var sport in await GetAllSports())
+            {
+                result[sport] = await GetCovering(sport);
+            }
+
+            return _memoryCache.Set(cacheKey, result);
+        }
+
+        public async Task<string[]> GetCovering(string scoreProvider)
+        {
+            var cacheKey = $"covering:{scoreProvider}";
+
+            if (_memoryCache.TryGetValue(cacheKey, out string[]? cachedInputNames))
+            {
+                return cachedInputNames!;
+            }
+
+            var inputNames = new HashSet<string>();
+            var visitedMeasures = new HashSet<string>(); // To avoid revisiting measures
+
+            async Task ProcessMeasure(string measureName)
+            {
+                if (visitedMeasures.Contains(measureName))
+                    return;
+
+                visitedMeasures.Add(measureName);
+
+                var measure = await _dbContext.ScoreProviders.SingleOrDefaultAsync(x => x.Name == measureName && !x.Disabled);
+
+                if (measure == null)
+                    return;
+
+                var (measures, scoreNames, inputs) = _formulaService.GetDependents(measure.Formula);
+
+                foreach (var input in inputs)
+                {
+                    inputNames.Add(input);
+                }
+
+                var dependentProviders = measures.Concat(scoreNames);
+
+                foreach (var dependentProvider in dependentProviders)
+                {
+                    await ProcessMeasure(dependentProvider); // Recursively process dependent measures
+                }
+            }
+
+            await ProcessMeasure(scoreProvider);
+
+            visitedMeasures.Remove(scoreProvider);
+
+            return _memoryCache.Set(cacheKey, visitedMeasures.ToArray());
         }
     }
 }

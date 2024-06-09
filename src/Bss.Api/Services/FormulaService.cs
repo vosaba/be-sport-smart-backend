@@ -16,9 +16,9 @@ namespace Bss.Api.Services
 
     public class FormulaService : IFormulaService
     {
-        private readonly Regex _measuresRegex = new Regex(@"measures\.(\w+)");
-        private readonly Regex _scoresRegex = new Regex(@"scores\.(\w+)");
-        private readonly Regex _inputsRegex = new Regex(@"inputs\.(\w+)");
+        private readonly Regex _measuresRegex = new Regex(@"context\.measures\.(\w+)");
+        private readonly Regex _scoresRegex = new Regex(@"context\.scores\.(\w+)");
+        private readonly Regex _inputsRegex = new Regex(@"context\.inputs\.(\w+)");
 
         private readonly Engine _testEngine = new Engine();
         private readonly IBeSportSmartDbContext _dbContext;

@@ -8,8 +8,8 @@ namespace Bss.Api.Data.Repositories
         Task<List<ScoreProvider>> GetScoreProviders(ScoreProviderFilterDto scoreProviderFilter);
         Task<ScoreProvider?> GetScoreProvider(string name);
         Task<List<string>> GetDependenstOfScoreProvider(string name);
-        void AddScoreProvider(ScoreProvider scoreProvider, IEnumerable<Input> inputs);
-        void UpdateScoreProvider(ScoreProvider scoreProvider, IEnumerable<Input> inputs);
+        void AddScoreProvider(ScoreProvider scoreProvider);
+        void UpdateScoreProvider(ScoreProvider scoreProvider);
         void RemoveScoreProvider(ScoreProvider scoreProvider);
     }
 }

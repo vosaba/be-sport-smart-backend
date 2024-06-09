@@ -10,6 +10,9 @@ namespace Bss.Api.Data.EntityConfigurations
         {
             builder.Property(sp => sp.DependentProviders)
                 .HasColumnType("text[]");
+
+            builder.Property(sp => sp.DependentInputs)
+                .HasColumnType("text[]");
         }
     }
 }

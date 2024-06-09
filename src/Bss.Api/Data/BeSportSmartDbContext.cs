@@ -9,7 +9,6 @@ namespace Bss.Api.Data
     {
         IQueryable<Input> IBeSportSmartDbContext.Inputs => Inputs;
         IQueryable<ScoreProvider> IBeSportSmartDbContext.ScoreProviders => ScoreProviders;
-        IQueryable<ScoreProviderInput> IBeSportSmartDbContext.ScoreProviderInputs => ScoreProviderInputs;
         IQueryable<Portfolio> IBeSportSmartDbContext.Portfolios => Portfolios;
 
         public BeSportSmartDbContext(DbContextOptions dbContextOptions)

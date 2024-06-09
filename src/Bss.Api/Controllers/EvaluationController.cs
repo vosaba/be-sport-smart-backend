@@ -30,35 +30,25 @@ namespace Bss.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var names = await _dbContext.ScoreProviders
-                .Where(x => x.Type == ScoreProviderType.Sport && !x.Disabled)
-                .Select(x => x.Name)
-                .ToListAsync();
-
-            return Ok(names);
+            return Ok(await _evaluationService.GetAllSports());
         }
 
-        //[HttpGet("getAllWithCovering")]
-        //public async Task<IActionResult> GetAllWithCovering()
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-
-        //    var names = await _dbContext.ScoreProviders
-        //        .Where(x => x.Type == ScoreProviderType.Sport && !x.Disabled)
-        //        .Select(x => x.Name)
-        //        .ToListAsync();
-
-        //    return Ok(names);
-        //}
-
-        [HttpGet("getInputs/{name}")]
-        public async Task<IActionResult> GetInputs([FromRoute] string name)
+        [HttpGet("getAllWithCovering")]
+        public async Task<IActionResult> GetAllWithCovering()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(await _evaluationService.GetRequiredInputs(name));
+            return Ok(await _evaluationService.GetAllSportsWithCovering());
+        }
+
+        [HttpGet("getInputs/{sport}")]
+        public async Task<IActionResult> GetInputs([FromRoute] string sport)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(await _evaluationService.GetRequiredInputs(sport));
         }
 
         [HttpPost("evaluate")]

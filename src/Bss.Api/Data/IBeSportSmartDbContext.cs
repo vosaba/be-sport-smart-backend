@@ -10,8 +10,6 @@ namespace Bss.Api.Data
 
         IQueryable<ScoreProvider> ScoreProviders { get; }
 
-        IQueryable<ScoreProviderInput> ScoreProviderInputs { get; }
-
         IQueryable<Portfolio> Portfolios { get; }
     }
 }

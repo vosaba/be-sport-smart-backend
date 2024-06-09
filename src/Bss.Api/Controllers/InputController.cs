@@ -1,10 +1,11 @@
+using Bss.Api.Data;
 using Bss.Api.Data.Models;
-using Bss.Api.Data.Repositories;
 using Bss.Api.Dtos.Input;
 using Bss.Api.Mappers;
 using Bss.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bss.Api.Controllers
 {
@@ -13,12 +14,13 @@ namespace Bss.Api.Controllers
     [ApiController]
     public class InputController : ControllerBase
     {
-        private readonly IInputRepository _inputRepository;
+        private readonly IBeSportSmartDbContext _dbContext;
+
         private readonly IEvaluationService _evaluationService;
 
-        public InputController(IInputRepository inputRepository, IEvaluationService evaluationService)
+        public InputController(IBeSportSmartDbContext dbContext, IEvaluationService evaluationService)
         {
-            _inputRepository = inputRepository;
+            _dbContext = dbContext;
             _evaluationService = evaluationService;
         }
 
@@ -28,7 +30,8 @@ namespace Bss.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var input = await _inputRepository.GetInput(name);
+
+            var input = await _dbContext.Inputs.SingleOrDefaultAsync(x => x.Name == name);
 
             if (input == null)
                 return NotFound();
@@ -42,19 +45,19 @@ namespace Bss.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingInput = await _inputRepository.GetInput(input.Name);
+            var existingInput = await _dbContext.Inputs.SingleOrDefaultAsync(x => x.Name == input.Name);
 
             if (existingInput != null)
                 return BadRequest("Input already exists");
 
-            _inputRepository.Add(new Input
+            _dbContext.Add(new Input
             {
                 Name = input.Name,
                 Type = input.Type,
                 Options = input.Options,
             });
 
-            await _inputRepository.ApplyChanges();
+            await _dbContext.ApplyChanges();
 
             await _evaluationService.RefreshContext();
 
@@ -67,17 +70,17 @@ namespace Bss.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var input = await _inputRepository.GetInput(name);
+            var input = await _dbContext.Inputs.SingleOrDefaultAsync(x => x.Name == name);
 
             if (input == null)
                 return NotFound();
 
-            if (input.ScoreProviderInputs.Any())
+            if (await _dbContext.ScoreProviders.AnyAsync(x => x.DependentInputs.Contains(name)))
                 return BadRequest("Input is used by some score providers");
 
-            _inputRepository.Remove(input);
+            _dbContext.Remove(input);
 
-            await _inputRepository.ApplyChanges();
+            await _dbContext.ApplyChanges();
 
             return Ok();
         }
@@ -88,7 +91,7 @@ namespace Bss.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingInput = await _inputRepository.GetInput(input.Name);
+            var existingInput = await _dbContext.Inputs.SingleOrDefaultAsync(x => x.Name == input.Name);
 
             if (existingInput == null)
                 return NotFound();
@@ -96,7 +99,7 @@ namespace Bss.Api.Controllers
             existingInput.Type = input.Type;
             existingInput.Options = input.Options;
 
-            await _inputRepository.ApplyChanges();
+            await _dbContext.ApplyChanges();
 
             await _evaluationService.RefreshContext();
 

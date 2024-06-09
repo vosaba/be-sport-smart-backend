@@ -11,6 +11,8 @@ namespace Bss.Api.Dtos.ScoreProvider
 
         public string? DependentOn { get; set; }
 
+        public string? InputUsed { get; set; }
+
         public bool? Disabled { get; set; }
     }
 }

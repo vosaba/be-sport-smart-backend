@@ -8,7 +8,6 @@ namespace Bss.Api.Data
     public partial class BeSportSmartDbContext
     {
         public DbSet<ScoreProvider> ScoreProviders { get; set; }
-        public DbSet<ScoreProviderInput> ScoreProviderInputs { get; set; }
 
         public Task<List<ScoreProvider>> GetScoreProviders(ScoreProviderFilterDto scoreProviderFilter)
         {
@@ -27,6 +26,11 @@ namespace Bss.Api.Data
             if (!string.IsNullOrWhiteSpace(scoreProviderFilter.DependentOn))
             {
                 query = query.Where(x => x.DependentProviders.Contains(scoreProviderFilter.DependentOn));
+            }
+
+            if (!string.IsNullOrWhiteSpace(scoreProviderFilter.InputUsed))
+            {
+                query = query.Where(x => x.DependentInputs.Contains(scoreProviderFilter.InputUsed));
             }
 
             if (scoreProviderFilter.Disabled.HasValue)
@@ -50,37 +54,37 @@ namespace Bss.Api.Data
                 .ToListAsync();
         }
 
-        public void AddScoreProvider(ScoreProvider scoreProvider, IEnumerable<Input> inputs)
+        public void AddScoreProvider(ScoreProvider scoreProvider)
         {
             Add(scoreProvider);
 
-            foreach (var input in inputs)
-            {
-                Add(new ScoreProviderInput
-                {
-                    ScoreProvider = scoreProvider,
-                    Input = input
-                });
-            }
+            //foreach (var input in inputs)
+            //{
+            //    Add(new ScoreProviderInput
+            //    {
+            //        ScoreProvider = scoreProvider,
+            //        Input = input
+            //    });
+            //}
         }
 
-        public void UpdateScoreProvider(ScoreProvider scoreProvider, IEnumerable<Input> inputs)
+        public void UpdateScoreProvider(ScoreProvider scoreProvider)
         {
             Update(scoreProvider);
 
-            foreach (var scoreProviderInput in scoreProvider.ScoreProviderInputs)
-            {
-                Remove(scoreProviderInput);
-            }
+            //foreach (var scoreProviderInput in scoreProvider.ScoreProviderInputs)
+            //{
+            //    Remove(scoreProviderInput);
+            //}
 
-            foreach (var input in inputs)
-            {
-                Add(new ScoreProviderInput
-                {
-                    ScoreProvider = scoreProvider,
-                    Input = input
-                });
-            }
+            //foreach (var input in inputs)
+            //{
+            //    Add(new ScoreProviderInput
+            //    {
+            //        ScoreProvider = scoreProvider,
+            //        Input = input
+            //    });
+            //}
         }
 
         public void RemoveScoreProvider(ScoreProvider scoreProvider)

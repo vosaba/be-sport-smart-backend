@@ -16,18 +16,15 @@ namespace Bss.Api.Controllers
     [ApiController]
     public class ScoreProviderController : ControllerBase
     {
-        private readonly IInputRepository _inputRepository;
         private readonly IScoreProviderRepository _scoreProviderRepository;
         private readonly IFormulaService _formulaService;
         private readonly IEvaluationService _evaluationService;
 
         public ScoreProviderController(
             IScoreProviderRepository scoreProviderRepository,
-            IInputRepository inputRepository,
             IFormulaService calculationEngine,
             IEvaluationService evaluationService)
         {
-            _inputRepository = inputRepository;
             _scoreProviderRepository = scoreProviderRepository;
             _formulaService = calculationEngine;
             _evaluationService = evaluationService;
@@ -78,13 +75,14 @@ namespace Bss.Api.Controllers
                 Type = scoreProvider.Type,
                 Formula = scoreProvider.Formula,
                 DependentProviders = measureNames.Concat(scoreNames).ToArray(),
+                DependentInputs = inputNames,
                 Created = date,
                 Updated = date,
                 CreatedBy = User.GetUsername(),
                 Disabled = scoreProvider.Disabled,
             };
 
-             _scoreProviderRepository.AddScoreProvider(newScoreProvider, await _inputRepository.GetInputs(inputNames));
+             _scoreProviderRepository.AddScoreProvider(newScoreProvider);
 
             await _scoreProviderRepository.ApplyChanges();
 
@@ -114,8 +112,9 @@ namespace Bss.Api.Controllers
             existingScoreProvider.Formula = scoreProvider.Formula;
             existingScoreProvider.Type = scoreProvider.Type;
             existingScoreProvider.DependentProviders = measureNames.Concat(scoreNames).ToArray();
+            existingScoreProvider.DependentInputs = inputNames;
 
-            _scoreProviderRepository.UpdateScoreProvider(existingScoreProvider, await _inputRepository.GetInputs(inputNames));
+            _scoreProviderRepository.UpdateScoreProvider(existingScoreProvider);
 
             await _scoreProviderRepository.ApplyChanges();
 

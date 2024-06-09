@@ -18,7 +18,8 @@
         public DateTime Updated { get; set; }
         public string Formula { get; set; } = string.Empty;
         public string[] DependentProviders { get; set; } = Array.Empty<string>();
+        public string[] DependentInputs { get; set; } = Array.Empty<string>();
 
-        public ICollection<ScoreProviderInput> ScoreProviderInputs { get; set; } = new List<ScoreProviderInput>();
+        //public ICollection<ScoreProviderInput> ScoreProviderInputs { get; set; } = new List<ScoreProviderInput>();
     }
 }
