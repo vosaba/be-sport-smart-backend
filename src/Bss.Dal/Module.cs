@@ -1,6 +1,5 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Identity.Data;
-using Bss.Component.Identity.Models;
 using Bss.Dal.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +39,6 @@ public class Module
                     .SetPostgresVersion(new Version(configuration.PostgresVersion))
                     .MigrationsAssembly(DbMigrationAssembly));
         });
-
-        services.AddIdentity<ApplicationUser, ApplicationUserRole>()
-            .AddEntityFrameworkStores<IdentityDbContext>();
     }
 
     public void Configure(IApplicationBuilder app)

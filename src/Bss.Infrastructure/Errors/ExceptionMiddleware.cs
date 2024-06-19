@@ -16,22 +16,24 @@ internal class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddle
         }
         catch (Exception ex)
         {
+            var cancellationToken = httpContext?.RequestAborted ?? CancellationToken.None;
+
             switch (ex)
             {
                 case ValidationException validationException:
-                    await HandleValidationException(httpContext, validationException, CancellationToken.None);
+                    await HandleValidationException(httpContext!, validationException, cancellationToken);
                     break;
                 case OperationException operationException:
-                    await HandleOperationException(httpContext, operationException, CancellationToken.None);
+                    await HandleOperationException(httpContext!, operationException, cancellationToken);
                     break;
                 case NotFoundException notFoundException:
-                    await HandleNotFoundException(httpContext, notFoundException, CancellationToken.None);
+                    await HandleNotFoundException(httpContext!, notFoundException, cancellationToken);
                     break;
                 case UnauthorizedAccessException unauthorizedAccessException:
-                    await HandleUnauthorizedAccessException(httpContext, unauthorizedAccessException, CancellationToken.None);
+                    await HandleUnauthorizedAccessException(httpContext!, unauthorizedAccessException, cancellationToken);
                     break;
                 default:
-                    await HandleUnknownExceptionAsync(httpContext, ex, CancellationToken.None);
+                    await HandleUnknownExceptionAsync(httpContext!, ex, cancellationToken);
                     break;
             }
         }
@@ -59,8 +61,8 @@ internal class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddle
             new ProblemDetails()
             {
                 Status = StatusCodes.Status404NotFound,
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 Title = "The specified resource was not found.",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 Detail = exception.Message
             },
             cancellationToken);
@@ -75,7 +77,8 @@ internal class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddle
             {
                 Status = StatusCodes.Status401Unauthorized,
                 Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+                Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+                Detail = exception.Message
             }, 
             cancellationToken: cancellationToken);
     }

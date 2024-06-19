@@ -12,6 +12,6 @@ internal class Module
 
     public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
     {
-        app.UseMiddleware<HandleExceptionMiddleware>();
+        app.UseMiddleware<ExceptionMiddleware>();
     }
 }

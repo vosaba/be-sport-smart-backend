@@ -3,7 +3,7 @@
 await Application.Run(
     args, 
     typeof(Bss.Component.Core.Module),
-    typeof(Bss.Component.Identity.Module),
     typeof(Bss.Dal.Module),
+    typeof(Bss.Component.Identity.Module),
     typeof(Bss.Dal.Migrations.Module),
-    typeof(Module));
+    typeof(Bss.Bootstrap.Module));

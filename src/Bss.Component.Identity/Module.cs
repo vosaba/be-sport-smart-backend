@@ -1,4 +1,7 @@
 ﻿using Bss.Component.Identity.Configuration;
+using Bss.Component.Identity.Data;
+using Bss.Component.Identity.Extensions;
+using Bss.Component.Identity.Models;
 using Bss.Component.Identity.Services;
 using Bss.Infrastructure.Commands;
 using Bss.Infrastructure.Configuration;
@@ -41,6 +44,9 @@ public class Module(IConfiguration configuration)
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Jwt.SigningKey)),
             };
         });
+
+        services.AddIdentity<ApplicationUser, ApplicationUserRole>()
+            .AddEntityFrameworkStores<ApplicationUser, ApplicationUserRole, IIdentityDbContext>();
 
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
