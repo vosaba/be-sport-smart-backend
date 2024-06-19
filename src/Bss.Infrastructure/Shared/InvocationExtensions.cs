@@ -6,7 +6,7 @@ namespace Bss.Infrastructure.Shared;
 /// <summary>
 /// Extensions used for types discovery and methods invocation.
 /// </summary>
-public static class InvocationExtensions
+internal static class InvocationExtensions
 {
     /// <summary>
     /// Iterates method parameters, looks up parameter values from passed dependencies

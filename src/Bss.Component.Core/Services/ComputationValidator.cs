@@ -1,7 +1,9 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Core.Models;
+using Bss.Infrastructure.Errors.Abstractions;
 using Jint;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bss.Component.Core.Services;
 
@@ -32,12 +34,12 @@ public class ComputationValidator : IComputationValidator
 
         if (computations.Count != computation.RequiredComputations.Count)
         {
-            throw new InvalidOperationException($"Missing required computations: {string.Join(", ", computation.RequiredComputations.Except(computations.Select(x => x.Name)))}");
+            throw new OperationException($"Missing required computations: {string.Join(", ", computation.RequiredComputations.Except(computations.Select(x => x.Name)))}");
         }
 
         if (measures.Count != computation.RequiredMeasures.Count)
         {
-            throw new InvalidOperationException($"Missing required measures: {string.Join(", ", computation.RequiredMeasures.Except(measures.Select(x => x.Name)))}");
+            throw new OperationException($"Missing required measures: {string.Join(", ", computation.RequiredMeasures.Except(measures.Select(x => x.Name)))}");
         }
 
         try
@@ -46,14 +48,14 @@ public class ComputationValidator : IComputationValidator
 
             if (_testEngine.Evaluate("typeof testComputation === 'function'").AsBoolean() != true)
             {
-                throw new InvalidOperationException("Formula must be a JS function");
+                throw new ValidationException(new ValidationResult("Formula must be a JS function", [nameof(computation.Formula)]), null, null);
             }
 
             // TODO: Add evaluation of the testComputation with context of required computations and measures
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not ValidationException)
         {
-            throw new InvalidOperationException(ex.Message);
+            throw new OperationException(ex.Message, OperationErrorCodes.InvalidRequest);
         }
     }
 

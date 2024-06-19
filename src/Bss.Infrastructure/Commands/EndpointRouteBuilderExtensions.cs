@@ -15,14 +15,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Immutable;
 using System.Reflection;
-using System.Reflection.Metadata;
 
 namespace Bss.Infrastructure.Commands;
 
-public static class EndpointRouteBuilderExtensions
+internal static class EndpointRouteBuilderExtensions
 {
     private static readonly string[] HttpMethods = ["POST"];
 

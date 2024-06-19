@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Bss.Infrastructure.Shared;
 
-public class AssemblyManager
+internal class AssemblyManager
 {
     private static readonly Lazy<Assembly[]> _assemblies = new(LoadAssemblies);
 

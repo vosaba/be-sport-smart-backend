@@ -2,21 +2,15 @@ using Bss.Component.Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace Bss.Identity.Commands.SignUp;
 
-public class SignUpHandler(UserManager<ApplicationUser> userManager, IUserStore<ApplicationUser> userStore)
+public class SignUpHandler(UserManager<ApplicationUser> userManager)
 {
     private const string SignUpRole = "User";
 
     public async Task<Results<Ok, ValidationProblem>> Handle(SignUpRequest request)
     {
-        //var emailStore = (IUserEmailStore<ApplicationUser>)userStore;
-        
-        //await userStore.SetUserNameAsync(user, request.UserName, CancellationToken.None);
-        //await userStore.SetEmailAsync(user, request.Email, CancellationToken.None);
-
         var user = new ApplicationUser
         {
             UserName = request.UserName,
@@ -28,12 +22,6 @@ public class SignUpHandler(UserManager<ApplicationUser> userManager, IUserStore<
         {
             return CreateValidationProblem(result);
         }
-
-        //result = await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, request.UserName));
-        //if (!result.Succeeded)
-        //{
-        //    return CreateValidationProblem(result);
-        //}
         
         result = await userManager.AddToRoleAsync(user, SignUpRole);
         if (!result.Succeeded)

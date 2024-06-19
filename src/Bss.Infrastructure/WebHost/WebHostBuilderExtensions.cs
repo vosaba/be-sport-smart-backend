@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Bss.Infrastructure.WebHost;
 
-public static class WebHostBuilderExtensions
+internal static class WebHostBuilderExtensions
 {
     public static IWebHostBuilder UseCompositeModule(this IWebHostBuilder webBuilder, params Type[] modules)
     {

@@ -7,6 +7,7 @@ public static class Modules
         typeof(Configuration.Module),
         typeof(Components.Module),
         typeof(Identity.Module),
+        typeof(Errors.Module),
         typeof(WebHost.Module),
     ];
 }

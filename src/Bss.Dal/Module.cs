@@ -34,7 +34,8 @@ public class Module
                 .GetRequiredService<IOptions<BssDalConfiguration>>()
                 .Value;
 
-            options.UseNpgsql(configuration.ConnectionStrings.BssIdentity, 
+            options.UseNpgsql(
+                configuration.ConnectionStrings.BssIdentity, 
                 builder => builder
                     .SetPostgresVersion(new Version(configuration.PostgresVersion))
                     .MigrationsAssembly(DbMigrationAssembly));

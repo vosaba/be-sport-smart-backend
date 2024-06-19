@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Bss.Infrastructure.Configuration;
 
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
     {

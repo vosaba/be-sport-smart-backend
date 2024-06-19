@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Bss.Infrastructure.Configuration;
 
-public static partial class ConfigurationBuilderExtentions
+internal static partial class ConfigurationBuilderExtentions
 {
     private const string ConfigFileSetting = "config";
     private const string ConfigFileName = "config.json,**/*.config.json";
