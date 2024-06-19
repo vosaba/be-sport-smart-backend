@@ -11,7 +11,7 @@ namespace Bss.Api.Services
     {
         public Task<(bool isValid, string? error)> Validate(string formula);
         public (string[] measures, string[] scores, string[] inputs) GetDependents(string formula);
-        public string[] GetAllInputs(string formula);
+        // public string[] GetAllInputs(string formula);
     }
 
     public class FormulaService : IFormulaService

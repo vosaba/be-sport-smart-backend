@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bss.Component.Core\Bss.Component.Core.csproj" />
+    <ProjectReference Include="..\..\src\Bss.Component.Identity\Bss.Component.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Bss.Dal.Migrations\Bss.Dal.Migrations.csproj" />
+    <ProjectReference Include="..\..\src\Bss.Dal\Bss.Dal.csproj" />
+    <ProjectReference Include="..\..\src\Bss.Infrastructure\Bss.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bss.Bootstrap.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

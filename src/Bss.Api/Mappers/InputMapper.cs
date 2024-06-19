@@ -11,6 +11,7 @@ namespace Bss.Api.Mappers
             {
                 Name = input.Name,
                 Type = input.Type,
+                InputSource = input.InputSource,
                 Options = input.Options
             };
         }

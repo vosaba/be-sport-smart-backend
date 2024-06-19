@@ -94,6 +94,9 @@ namespace Bss.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("InputSource")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -193,19 +196,19 @@ namespace Bss.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7a861fbe-53cc-4e36-b80a-d253659a0ca1",
+                            Id = "a1421f0d-ac64-4c4b-b1ea-e8b69af7da84",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "7a0a9a16-4b9e-4305-912b-2d8e6da46dd8",
+                            Id = "96d9c33e-032b-4bc5-a604-9f306542b9ee",
                             Name = "Trainer",
                             NormalizedName = "TRAINER"
                         },
                         new
                         {
-                            Id = "d9303440-d983-4a25-a18a-e94bb7a321df",
+                            Id = "186b627d-f808-4b0f-a845-864fe96a021a",
                             Name = "User",
                             NormalizedName = "USER"
                         });

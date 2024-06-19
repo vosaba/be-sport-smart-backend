@@ -6,4 +6,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Bss.Component.Core\Bss.Component.Core.csproj" />
+    <ProjectReference Include="..\Bss.Component.Identity\Bss.Component.Identity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bss.Dal.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,11 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Trace",
+      "Microsoft.Hosting.Lifetime": "Trace"
+    }
+  },
+  "Security": {
+    "AllowedOrigins": [ "localhost", "http://localhost:8080" ]
+  }
+}

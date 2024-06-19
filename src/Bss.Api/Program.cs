@@ -123,11 +123,10 @@ if (true || app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors(x => x
+     .WithOrigins("https://localhost:44351")
      .AllowAnyMethod()
      .AllowAnyHeader()
-     .AllowCredentials()
-      //.WithOrigins("https://localhost:44351))
-      .SetIsOriginAllowed(origin => true));
+     .AllowCredentials());
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -54,6 +54,7 @@ namespace Bss.Api.Controllers
             {
                 Name = input.Name,
                 Type = input.Type,
+                InputSource = input.InputSource,
                 Options = input.Options,
             });
 
@@ -104,6 +105,18 @@ namespace Bss.Api.Controllers
             await _evaluationService.RefreshContext();
 
             return Ok();
+        }
+
+        [HttpGet("all")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAll()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var inputs = await _dbContext.Inputs.ToListAsync();
+
+            return Ok(inputs.OrderBy(x => x.InputSource).Select(x => x.ToInputDto()));
         }
     }
 }

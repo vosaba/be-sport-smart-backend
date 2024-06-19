@@ -12,6 +12,9 @@ namespace Bss.Api.Dtos.Input
         [Required]
         public InputType Type { get; set; }
 
+        [Required]
+        public InputSource InputSource { get; set; }
+
         public string[] Options { get; set; } = Array.Empty<string>();
     }
 }
