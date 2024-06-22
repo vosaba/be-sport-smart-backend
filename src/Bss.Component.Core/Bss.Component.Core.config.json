@@ -1,5 +1,5 @@
 {
   "BssCore": {
-    "DefaultComputationEngine": "Js"
+    "SupportedEngines": [ "Js", "Dummy" ]
   }
 }

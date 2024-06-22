@@ -3,9 +3,11 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Bss.Infrastructure.Shared.Services;
 
-internal class LocalCacheCollection<TItem>(IMemoryCache memoryCache) : ILocalCacheCollection<TItem> where TItem : class
+internal class LocalCacheCollection<TItem>(IMemoryCache memoryCache) 
+    : ILocalCacheCollection<TItem> 
+        where TItem : class
 {
-    private readonly string _collectionKey = $"{nameof(TItem)}_Collection";
+    private readonly string _collectionKey = $"{typeof(TItem).Name}_Collection";
     private readonly object _lock = new();
 
     public bool IsEmpty
@@ -63,6 +65,14 @@ internal class LocalCacheCollection<TItem>(IMemoryCache memoryCache) : ILocalCac
         lock (_lock)
         {
             return GetCollection();
+        }
+    }
+
+    public void Overwrite(IEnumerable<TItem> items)
+    {
+        lock (_lock)
+        {
+            memoryCache.Set(_collectionKey, items.ToList());
         }
     }
 

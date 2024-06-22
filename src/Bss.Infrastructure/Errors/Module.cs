@@ -10,7 +10,7 @@ internal class Module
         //services.AddExceptionHandler<ExceptionHandler>();
     }
 
-    public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+    public void Configure(IApplicationBuilder app)
     {
         app.UseMiddleware<ExceptionMiddleware>();
     }

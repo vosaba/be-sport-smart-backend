@@ -1,4 +1,4 @@
-﻿using Bss.Dal.Migrations.Initializers;
+﻿using Bss.Dal.Migrations.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +8,7 @@ public class Module
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<CoreDbContextInitializer>();
-        services.AddScoped<IdentityDbContextInitializer>();
+        services.AddScoped<RunMigrationsJob>();
     }
 
     public void Configure(IApplicationBuilder app)

@@ -5,5 +5,4 @@ await Application.Run(
     typeof(Bss.Component.Core.Module),
     typeof(Bss.Dal.Module),
     typeof(Bss.Component.Identity.Module),
-    typeof(Bss.Dal.Migrations.Module),
-    typeof(Bss.Bootstrap.Module));
+    typeof(Bss.Dal.Migrations.Module));

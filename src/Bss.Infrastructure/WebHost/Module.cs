@@ -14,14 +14,10 @@ internal class Module
         services.AddEndpointsApiExplorer();
     }
 
-    public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+    public void Configure(IApplicationBuilder app, IOptions<SecurityConfiguration> securityConfig)
     {
-        var securityConfiguration = serviceProvider
-            .GetRequiredService<IOptions<SecurityConfiguration>>()
-            .Value;
-
         app.UseCors(x => x
-         .WithOrigins(securityConfiguration.AllowedOrigins)
+         .WithOrigins(securityConfig.Value.AllowedOrigins)
          .AllowAnyMethod()
          .AllowAnyHeader()
          .AllowCredentials());

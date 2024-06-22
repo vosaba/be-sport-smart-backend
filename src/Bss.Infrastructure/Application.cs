@@ -27,7 +27,7 @@ public class Application
         catch (Exception ex)
         {
             Console.WriteLine(JsonConvert.SerializeObject(ex));
-            Environment.Exit(-87);
+            Environment.Exit(-1995);
         }
     }
 

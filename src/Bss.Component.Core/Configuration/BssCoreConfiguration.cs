@@ -6,5 +6,5 @@ namespace Bss.Component.Core.Configuration;
 [Configuration]
 public class BssCoreConfiguration
 {
-    public ComputationEngine DefaultComputationEngine { get; set; }
+    public ComputationEngine[] SupportedEngines { get; set; } = [];
 }
