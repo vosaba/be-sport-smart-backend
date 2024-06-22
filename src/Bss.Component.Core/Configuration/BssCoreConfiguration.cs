@@ -1,15 +1,10 @@
-﻿using Bss.Infrastructure.Configuration.Abstractions;
+﻿using Bss.Component.Core.Enums;
+using Bss.Infrastructure.Configuration.Abstractions;
 
 namespace Bss.Component.Core.Configuration;
 
-[Configuration("BssCore")]
+[Configuration]
 public class BssCoreConfiguration
 {
-    public string Test { get; set; } = string.Empty;
-}
-
-[Configuration("BssCore2")]
-public class BssCore2Configuration
-{
-    public string Test { get; set; } = string.Empty;
+    public ComputationEngine DefaultComputationEngine { get; set; }
 }

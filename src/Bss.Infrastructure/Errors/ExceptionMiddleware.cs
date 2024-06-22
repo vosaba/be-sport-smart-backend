@@ -16,6 +16,8 @@ internal class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddle
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, ex.Message);
+
             var cancellationToken = httpContext?.RequestAborted ?? CancellationToken.None;
 
             switch (ex)

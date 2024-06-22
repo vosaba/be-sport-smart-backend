@@ -1,4 +1,4 @@
-﻿namespace Bss.Infrastructure.Shared;
+﻿namespace Bss.Infrastructure.Shared.Extensions;
 
 public static class StringExtensions
 {

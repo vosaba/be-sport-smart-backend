@@ -1,5 +1,5 @@
 {
   "BssCore": {
-    "Test": "Test_222"
+    "DefaultComputationEngine": "Js"
   }
 }

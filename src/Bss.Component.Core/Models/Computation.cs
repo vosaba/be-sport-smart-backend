@@ -1,19 +1,16 @@
-﻿using System.Text.RegularExpressions;
-using Bss.Component.Core.Enums;
+﻿using Bss.Component.Core.Enums;
+using Bss.Component.Core.Services.ComputationAnalyzers;
 
 namespace Bss.Component.Core.Models;
 
-public partial class Computation
+public class Computation
 {
     public Computation(
-        ComputationType type,
         string name,
-        string formula,
-        string createdBy)
-    {
-        (_requiredComputations, _requiredMeasures) = FormulaDependencies(formula);
-        (Type, Name, Formula, CreatedBy, CreatedAt, UpdatedAt) = (type, name, formula, createdBy, DateTime.UtcNow, DateTime.UtcNow);
-    }
+        ComputationType type,
+        ComputationEngine engine,
+        Guid createdBy) 
+        => (Name, Type, Engine, CreatedBy, CreatedAt, UpdatedAt) = (name, type, engine, createdBy, DateTime.UtcNow, DateTime.UtcNow);
 
     public Guid Id { get; init; }
 
@@ -29,39 +26,24 @@ public partial class Computation
     private List<string> _requiredMeasures = [];
     public IReadOnlyCollection<string> RequiredMeasures => _requiredMeasures;
 
+    public ComputationEngine Engine { get; private set; }
+
     public bool Disabled { get; private set; }
 
-    public string CreatedBy { get; init; } = string.Empty;
+    public Guid CreatedBy { get; init; }
 
     public DateTime CreatedAt { get; init; }
 
     public DateTime UpdatedAt { get; private set; }
 
-    public void Update(
-        ComputationType type,
-        string name,
-        string formula,
-        bool disabled)
+    public void Update(ComputationType type, string name, bool disabled) 
+        => (Type, Name, Disabled, UpdatedAt) = (type, name, disabled, DateTime.UtcNow);
+
+    public async Task SetFormula(string formula, IComputationAnalyzer computationAnalyzer)
     {
-        (_requiredComputations, _requiredMeasures) = FormulaDependencies(formula);
-        (Type, Name, Formula, Disabled, UpdatedAt) = (type, name, formula, disabled, DateTime.UtcNow);
+        Formula = formula;
+        (_requiredComputations, _requiredMeasures) = await computationAnalyzer.GetComputationRequirements(this);
+
+        await computationAnalyzer.EnsureValid(this);
     }
-
-    private static (List<string> computations, List<string> measures) FormulaDependencies(string formula) 
-        => (ComputationsUsed()
-            .Matches(formula)
-            .Select(m => m.Groups[1].Value)
-            .Distinct()
-            .ToList(),
-            MeasuresUsed()
-            .Matches(formula)
-            .Select(m => m.Groups[1].Value)
-            .Distinct()
-            .ToList());
-
-    [GeneratedRegex(@"context\.(metrics|scores)\.(\w+)")]
-    private static partial Regex ComputationsUsed();
-
-    [GeneratedRegex(@"context\.measures\.(\w+)")]
-    private static partial Regex MeasuresUsed();
 }

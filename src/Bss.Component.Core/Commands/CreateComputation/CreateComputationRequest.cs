@@ -9,6 +9,9 @@ public class CreateComputationRequest
     public ComputationType Type { get; init; }
 
     [Required]
+    public ComputationEngine Engine { get; init; }
+
+    [Required]
     public string Name { get; init; } = string.Empty;
 
     [Required]

@@ -4,31 +4,21 @@ using Bss.Infrastructure.Errors.Abstractions;
 using Jint;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
-namespace Bss.Component.Core.Services;
+namespace Bss.Component.Core.Services.ComputationAnalyzers;
 
-public interface IComputationValidator : IDisposable
-{
-    public Task EnsureValidComputation(Computation computation);
-}
-
-public class ComputationValidator : IComputationValidator
+public partial class JsComputationAnalyzer(ICoreDbContext dbContext) : IComputationAnalyzer
 {
     private readonly Engine _testEngine = new();
-    private readonly ICoreDbContext _dbContext;
 
-    public ComputationValidator(ICoreDbContext dbContext)
+    public async Task EnsureValid(Computation computation)
     {
-        _dbContext = dbContext;
-    }
-
-    public async Task EnsureValidComputation(Computation computation)
-    {
-        var computations = await _dbContext.Computations
-            .Where(x => computation.RequiredComputations.Contains(x.Name) && !x.Disabled)
+        var computations = await dbContext.Computations
+            .Where(x => computation.RequiredComputations.Contains(x.Name) && x.Engine == computation.Engine && !x.Disabled)
             .ToListAsync();
 
-        var measures = await _dbContext.Measures
+        var measures = await dbContext.Measures
             .Where(x => computation.RequiredMeasures.Contains(x.Name) && !x.Disabled)
             .ToListAsync();
 
@@ -50,14 +40,31 @@ public class ComputationValidator : IComputationValidator
             {
                 throw new ValidationException(new ValidationResult("Formula must be a JS function", [nameof(computation.Formula)]), null, null);
             }
-
-            // TODO: Add evaluation of the testComputation with context of required computations and measures
         }
         catch (Exception ex) when (ex is not ValidationException)
         {
-            throw new OperationException(ex.Message, OperationErrorCodes.InvalidRequest);
+            throw new OperationException("Error validating formula", ex, OperationErrorCodes.InvalidRequest);
         }
     }
 
+    public async Task<ComputationRequirements> GetComputationRequirements(Computation computation)
+        => new ComputationRequirements(
+            ComputationsUsed()
+                .Matches(computation.Formula)
+                .Select(m => m.Groups[2].Value)
+                .Distinct()
+                .ToList(),
+            MeasuresUsed()
+                .Matches(computation.Formula)
+                .Select(m => m.Groups[1].Value)
+                .Distinct()
+                .ToList());
+
     public void Dispose() => _testEngine.Dispose();
+
+    [GeneratedRegex(@"context\.(metrics|scores)\.(\w+)")]
+    private static partial Regex ComputationsUsed();
+
+    [GeneratedRegex(@"context\.measures\.(\w+)")]
+    private static partial Regex MeasuresUsed();
 }

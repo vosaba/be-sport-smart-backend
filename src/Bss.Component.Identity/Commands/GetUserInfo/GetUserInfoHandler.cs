@@ -12,6 +12,7 @@ public class GetUserInfoHandler(IUserContext userContext)
         return Task.FromResult(new UserInfo
         {
             UserName = userContext.UserName,
+            Email = userContext.Email,
             Roles = [..userContext.Roles]
         });
     }

@@ -21,7 +21,7 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     Name = table.Column<string>(type: "text", nullable: false),
                     Formula = table.Column<string>(type: "text", nullable: false),
                     Disabled = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<string>(type: "text", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RequiredComputations = table.Column<List<string>>(type: "text[]", nullable: false),

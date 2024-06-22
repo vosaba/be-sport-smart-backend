@@ -8,6 +8,7 @@ public static class Modules
         typeof(Components.Module),
         typeof(Identity.Module),
         typeof(Errors.Module),
+        typeof(Shared.Module),
         typeof(WebHost.Module),
     ];
 }

@@ -10,6 +10,7 @@ public class ComputationConfiguration : IEntityTypeConfiguration<Computation>
     {
         builder.HasIndex(x => x.Name).IsUnique();
         builder.HasIndex(x => x.Type);
+        builder.HasIndex(x => x.Engine);
 
         builder.Property("_requiredComputations")
             .HasColumnName("RequiredComputations")
