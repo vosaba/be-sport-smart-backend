@@ -28,16 +28,17 @@ public class EvaluateComputationHandler(
         }
 
         var availableComputations = computationCacheCollection.GetAll();
-        var availableMeasures = measureCacheCollection.GetAll();
 
         var computation = availableComputations
             .SingleOrDefault(x => x.Name == request.Name) 
             ?? throw new NotFoundException(request.Name, nameof(Computation));
 
-        var neededMeasures = availableMeasures.Where(x => computation.RequiredMeasures.Contains(x.Name));
-        if (!neededMeasures.Any(x => request.MeasureValues.ContainsKey(x.Name)))
+        if (computation.RequiredMeasures.Count > 0 && !computation.RequiredMeasures.Any(request.MeasureValues.ContainsKey))
         {
-            throw new OperationException("Missing measure values.", neededMeasures.Select(x => x.Name), OperationErrorCodes.InvalidRequest);
+            throw new OperationException(
+                "Missing measure values.", 
+                computation.RequiredMeasures.Except(request.MeasureValues.Keys),
+                OperationErrorCodes.InvalidRequest);
         }
 
         var computationEngine = computationEngineFactory.GetService(computation.Engine);
@@ -46,7 +47,12 @@ public class EvaluateComputationHandler(
             logger.LogWarning("Computation engine context not initialized.");
         }
 
-        var measureValues = neededMeasures.Select(x => new MeasureValue(x.Name, x.Type, request.MeasureValues[x.Name])).ToArray();
+        var availableMeasures = measureCacheCollection
+            .GetAll()
+            .Where(x => computation.RequiredMeasures.Contains(x.Name))
+            .ToDictionary(x => x.Name, x => x.Type);
+
+        var measureValues = computation.RequiredMeasures.Select(x => new MeasureValue(x, availableMeasures[x], request.MeasureValues[x])).ToArray();
 
         var result = await computationEngine.Evaluate<double>(computation, measureValues);
         return new EvaluateComputationResponse

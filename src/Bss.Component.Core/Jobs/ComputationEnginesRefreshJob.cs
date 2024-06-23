@@ -1,18 +1,15 @@
-﻿using Bss.Component.Core.Configuration;
-using Bss.Component.Core.Models;
+﻿using Bss.Component.Core.Models;
 using Bss.Component.Core.Services.ComputationEngines;
 using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Jobs.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Bss.Component.Core.Jobs;
 
-[Job(nameof(ComputationEnginesInitializerJob))]
-public class ComputationEnginesInitializerJob(
-    IOptions<BssCoreConfiguration> config,
-    ILogger<ComputationEnginesInitializerJob> logger,
+[Job(nameof(ComputationEnginesRefreshJob))]
+public class ComputationEnginesRefreshJob(
+    ILogger<ComputationEnginesRefreshJob> logger,
     IServiceFactory<IComputationEngine> computationEngineFactory,
     ILocalCacheCollection<Computation> computationCacheCollection) 
     : IJob
@@ -28,7 +25,7 @@ public class ComputationEnginesInitializerJob(
 
         var computations = computationCacheCollection.GetAll();
 
-        foreach (var engine in config.Value.SupportedEngines)
+        foreach (var engine in computations.Select(x => x.Engine).Distinct())
         {
             try
             {

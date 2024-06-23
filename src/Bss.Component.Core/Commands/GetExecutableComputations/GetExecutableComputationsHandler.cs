@@ -1,4 +1,4 @@
-﻿using Bss.Component.Core.Enums;
+﻿using Bss.Component.Core.Dto;
 using Bss.Component.Core.Models;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +11,7 @@ public class GetExecutableComputationsHandler(
     ILogger<GetExecutableComputationsHandler> logger,
     ILocalCacheCollection<Computation> computationCacheCollection)
 {
-    public async Task<GetExecutableComputationsResponse> Handle(GetExecutableComputationsRequest request)
+    public async Task<ExecutableComputationDto[]> Handle(GetExecutableComputationsRequest request)
     {
         if (computationCacheCollection.IsEmpty)
         {
@@ -20,12 +20,13 @@ public class GetExecutableComputationsHandler(
 
         var availableComputations = computationCacheCollection
             .GetAll()
-            .Where(x => x.RequiredMeasures.All(c => request.MeasureValues.ContainsKey(c)))
-            .Where(x => x.Type == ComputationType.Sport || x.Type == ComputationType.Metric);
+            .Where(x => x.Type == request.Type);
 
-        return new GetExecutableComputationsResponse
+        return availableComputations.Select(x => new ExecutableComputationDto
         {
-            ComputationNames = availableComputations.Select(x => x.Name).ToArray()
-        };
+            Name = x.Name,
+            Type = x.Type,
+            Executable = x.RequiredMeasures.All(c => request.MeasureValues.ContainsKey(c))
+        }).ToArray();
     }
 }

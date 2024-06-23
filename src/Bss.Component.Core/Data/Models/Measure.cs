@@ -7,7 +7,8 @@ public class Measure(
     MeasureType type,
     MeasureSource inputSource,
     Guid createdBy,
-    bool disabled)
+    bool disabled,
+    string[] options)
 {
     public Guid Id { get; init; }
 
@@ -17,7 +18,7 @@ public class Measure(
 
     public MeasureSource InputSource { get; private set; } = inputSource;
 
-    public string[] Options { get; private set; } = [];
+    public string[] Options { get; private set; } = options;
 
     public bool Disabled { get; private set; } = disabled;
 

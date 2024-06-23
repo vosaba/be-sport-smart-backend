@@ -11,8 +11,8 @@
   },
   "Jobs": {
     "Dashboard": {
-      "Path": "/JobsDashboard",
       "Enabled": true,
+      "Path": "/JobsDashboard",
       "ReadOnly": null,
       "Roles": [ "Admin" ]
     },
@@ -22,16 +22,16 @@
         "TriggerOnStartup": false
       },
       {
-        "Name": "CachesInitializerJob",
+        "Name": "ComputationsCacheRefreshJob",
         "TriggerOnStartup": true
       },
       {
-        "Name": "IdentityInitializerJob",
+        "Name": "MeasuresCacheRefreshJob",
         "TriggerOnStartup": true
       },
       {
-        "Name": "ComputationEnginesInitializerJob",
-        "TriggerOnStartup": false
+        "Name": "ComputationEnginesRefreshJob",
+        "TriggerOnStartup": true
       }
     ]
   }

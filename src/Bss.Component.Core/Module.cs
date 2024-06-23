@@ -30,8 +30,9 @@ public class Module
             .Register<DummyComputationAnalyzer>(ComputationEngine.Dummy)
             .Build();
         
-        services.AddScoped<CachesInitializerJob>();
-        services.AddScoped<ComputationEnginesInitializerJob>();
+        services.AddScoped<MeasuresCacheRefreshJob>();
+        services.AddScoped<ComputationsCacheRefreshJob>();
+        services.AddScoped<ComputationEnginesRefreshJob>();
 
         services.AddCommands<Module>(nameof(Core), filters: [type => !IsAdminCommand(type)]);
         services.AddCommands<Module>(nameof(Core), "admin", [IsAdminCommand]);
