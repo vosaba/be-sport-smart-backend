@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.GetComputation;
+namespace Bss.Component.Core.Commands.Admin.GetComputation;
 
 public class GetComputationRequest
 {

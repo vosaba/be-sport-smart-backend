@@ -4,7 +4,7 @@ using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bss.Component.Core.Commands.UpdateMeasure;
+namespace Bss.Component.Core.Commands.Admin.UpdateMeasure;
 
 [Authorize(Roles = "Admin")]
 public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbContext)

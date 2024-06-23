@@ -3,7 +3,7 @@ using Bss.Component.Core.Models;
 using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bss.Component.Core.Commands.CreateMeasure;
+namespace Bss.Component.Core.Commands.Admin.CreateMeasure;
 
 [Authorize(Roles = "Admin")]
 public class CreateMeasureHandler(IUserContext userContext, ICoreDbContext dbContext)

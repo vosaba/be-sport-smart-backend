@@ -113,10 +113,11 @@ public static partial class ServiceCollectionExtensions
                 .Replace(type.Name, string.Empty)
                 .ToLowerCamelCase();
 
-            builder.ModuleName = module.ToLowerCamelCase();
-            builder.Route = subEntity != null
-                ? $"/{CommandConstants.RoutePrefix}/{builder.ModuleName}/{subEntity.ToLowerCamelCase()}/{name}"
-                : $"/{CommandConstants.RoutePrefix}/{builder.ModuleName}/{name}";
+            builder.ModuleName = subEntity != null
+                ? $"{module.ToLowerCamelCase()}/{subEntity.ToLowerCamelCase()}"
+                : module.ToLowerCamelCase();
+
+            builder.Route = $"/{CommandConstants.RoutePrefix}/{builder.ModuleName}/{name}";
             
             return true;
         });

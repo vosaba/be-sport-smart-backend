@@ -6,15 +6,13 @@ using Bss.Infrastructure.Identity.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
 
-namespace Bss.Component.Core.Commands.CreateComputation;
+namespace Bss.Component.Core.Commands.Admin.CreateComputation;
 
 [Authorize(Roles = "Admin")]
 public class CreateComputationHandler(
     IMediator mediator,
     IUserContext userContext,
-    ILogger<CreateComputationHandler> logger,
     ICoreDbContext dbContext,
     IServiceFactory<IComputationAnalyzer> computationAnalyzerFactory)
 {

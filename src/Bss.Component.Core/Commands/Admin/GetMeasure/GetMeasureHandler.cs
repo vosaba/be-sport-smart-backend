@@ -6,7 +6,7 @@ using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bss.Component.Core.Commands.GetMeasure;
+namespace Bss.Component.Core.Commands.Admin.GetMeasure;
 
 [Authorize(Roles = "Admin")]
 public class GetMeasureHandler(IUserContext userContext, ICoreDbContext dbContext)

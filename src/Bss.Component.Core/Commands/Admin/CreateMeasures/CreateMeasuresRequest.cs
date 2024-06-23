@@ -1,13 +1,10 @@
 ﻿using Bss.Component.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.UpdateMeasure;
+namespace Bss.Component.Core.Commands.Admin.CreateMeasures;
 
-public class UpdateMeasureRequest
+public record class CreateMeasure
 {
-    [Required]
-    public Guid Id { get; init; }
-
     [Required]
     public string Name { get; init; } = string.Empty;
 
@@ -22,4 +19,11 @@ public class UpdateMeasureRequest
 
     [Required]
     public bool Disabled { get; init; }
+}
+
+public class CreateMeasuresRequest
+{
+    [Required]
+    [MinLength(1)]
+    public CreateMeasure[] Measures { get; init; } = [];
 }

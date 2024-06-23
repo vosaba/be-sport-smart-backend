@@ -1,7 +1,7 @@
 ﻿using Bss.Component.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.CreateMeasure;
+namespace Bss.Component.Core.Commands.Admin.CreateMeasure;
 
 public class CreateMeasureRequest
 {

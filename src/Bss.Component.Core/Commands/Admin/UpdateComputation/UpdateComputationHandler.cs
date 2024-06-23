@@ -8,7 +8,7 @@ using Bss.Infrastructure.Shared.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bss.Component.Core.Commands.UpdateComputation;
+namespace Bss.Component.Core.Commands.Admin.UpdateComputation;
 
 [Authorize(Roles = "Admin")]
 public class UpdateComputationHandler(

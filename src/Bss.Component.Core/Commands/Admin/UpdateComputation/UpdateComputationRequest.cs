@@ -1,7 +1,7 @@
 ﻿using Bss.Component.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.UpdateComputation;
+namespace Bss.Component.Core.Commands.Admin.UpdateComputation;
 
 public class UpdateComputationRequest
 {

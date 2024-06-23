@@ -33,11 +33,15 @@ public class Module
         services.AddScoped<CachesInitializerJob>();
         services.AddScoped<ComputationEnginesInitializerJob>();
 
-        services.AddCommands<Module>(nameof(Core));
+        services.AddCommands<Module>(nameof(Core), filters: [type => !IsAdminCommand(type)]);
+        services.AddCommands<Module>(nameof(Core), "admin", [IsAdminCommand]);
+
         services.AddMediatR(typeof(Module).Assembly);
     }
 
     public void Configure(IApplicationBuilder app)
     {        
     }
+
+    private static bool IsAdminCommand(Type type) => type.Namespace!.Contains(nameof(Commands.Admin));
 }

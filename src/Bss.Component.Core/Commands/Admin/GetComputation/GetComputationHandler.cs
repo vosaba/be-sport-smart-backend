@@ -6,7 +6,7 @@ using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bss.Component.Core.Commands.GetComputation;
+namespace Bss.Component.Core.Commands.Admin.GetComputation;
 
 [Authorize(Roles = "Admin")]
 public class GetComputationHandler(IUserContext userContext, ICoreDbContext dbContext)
