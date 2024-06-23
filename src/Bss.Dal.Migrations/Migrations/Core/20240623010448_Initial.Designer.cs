@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bss.Dal.Migrations.Migrations.Core
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20240619200135_Initial")]
+    [Migration("20240623010448_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -41,6 +41,9 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     b.Property<bool>("Disabled")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Engine")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Formula")
                         .IsRequired()
                         .HasColumnType("text");
@@ -67,6 +70,8 @@ namespace Bss.Dal.Migrations.Migrations.Core
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Engine");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
@@ -84,9 +89,8 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("Disabled")
                         .HasColumnType("boolean");

@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Bss.Component.Core.Jobs;
 
-[Job(nameof(CacheInitializerJob))]
-public class CacheInitializerJob(
+[Job(nameof(CachesInitializerJob))]
+public class CachesInitializerJob(
     IJobRunner jobRunner,
     ICoreDbContext dbContext,
-    ILogger<CacheInitializerJob> logger,
+    ILogger<CachesInitializerJob> logger,
     ILocalCacheCollection<Computation> computationCacheCollection,
-    ILocalCacheCollection<Measure> measureCacheColelction)
+    ILocalCacheCollection<Measure> measureCacheCollection)
     : IJob
 {
     public async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -22,14 +22,16 @@ public class CacheInitializerJob(
 
         var computations = await dbContext
             .Computations
+            .Where(x => x.Disabled == false)
             .ToListAsync(cancellationToken);
 
         var measures = await dbContext
             .Measures
+            .Where(x => x.Disabled == false)
             .ToListAsync(cancellationToken);
 
         computationCacheCollection.AddRange(computations);
-        measureCacheColelction.AddRange(measures);
+        measureCacheCollection.AddRange(measures);
 
         logger.LogTrace("Cache collections initialized.");
 

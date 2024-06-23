@@ -17,6 +17,7 @@ internal class ComputationListChangeEventHandler(
 {
     public async Task Handle(ComputationListChangeEvent @event, CancellationToken cancellationToken)
     {
+        // TODO: remove logic from here and trigger related job for sync porpuses
         logger.LogTrace("Computation list change event received.");
 
         var computationEngine = computationEngineFactory

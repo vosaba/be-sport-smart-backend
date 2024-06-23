@@ -24,3 +24,26 @@ public class NotFoundException : Exception
     {
     }
 }
+
+public class NotFoundException<TObject> : NotFoundException
+{
+    public NotFoundException(string key)
+        : base(key, typeof(TObject).Name)
+    {
+    }
+
+    public NotFoundException(object key)
+        : this(key.ToString()!)
+    {
+    }
+
+    public NotFoundException(string key, Exception innerException)
+        : base(key, typeof(TObject).Name, innerException)
+    {
+    }
+
+    public NotFoundException(object key, Exception innerException)
+        : this(key.ToString()!, innerException)
+    {
+    }
+}

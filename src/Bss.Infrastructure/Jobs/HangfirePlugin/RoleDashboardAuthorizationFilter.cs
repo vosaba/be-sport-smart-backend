@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Bss.Infrastructure.Jobs.HangfirePlugin;
 
-public class RoleDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+internal class RoleDashboardAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize(DashboardContext dashboardContext)
     {

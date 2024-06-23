@@ -8,6 +8,8 @@ public record ComputationDto
 
     public required ComputationType Type { get; init; }
 
+    public required ComputationEngine Engine { get; init; }
+
     public required string Name { get; init; } = string.Empty;
 
     public required string Formula { get; init; } = string.Empty;

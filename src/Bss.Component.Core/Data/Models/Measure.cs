@@ -2,42 +2,30 @@
 
 namespace Bss.Component.Core.Models;
 
-public class Measure
+public class Measure(
+    string name,
+    MeasureType type,
+    MeasureSource inputSource,
+    Guid createdBy,
+    bool disabled)
 {
     public Guid Id { get; init; }
 
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; private set; } = name;
 
-    public MeasureType Type { get; private set; }
+    public MeasureType Type { get; private set; } = type;
 
-    public MeasureSource InputSource { get; private set; }
+    public MeasureSource InputSource { get; private set; } = inputSource;
 
     public string[] Options { get; private set; } = [];
 
-    public bool Disabled { get; private set; }
+    public bool Disabled { get; private set; } = disabled;
 
-    public string CreatedBy { get; init; } = string.Empty;
+    public Guid CreatedBy { get; private set; } = createdBy;
 
-    public required DateTime CreatedAt { get; init; }
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public DateTime UpdatedAt { get; private set; }
-
-    public static Measure Create(
-        string name,
-        MeasureType type,
-        MeasureSource inputSource,
-        string createdBy)
-    {
-        return new Measure
-        {
-            Name = name,
-            Type = type,
-            InputSource = inputSource,
-            CreatedBy = createdBy,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-    }
+    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
     public void Update(
         string name,

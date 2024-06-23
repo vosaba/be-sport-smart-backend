@@ -30,7 +30,7 @@ public class Module
             .Register<DummyComputationAnalyzer>(ComputationEngine.Dummy)
             .Build();
         
-        services.AddScoped<CacheInitializerJob>();
+        services.AddScoped<CachesInitializerJob>();
         services.AddScoped<ComputationEnginesInitializerJob>();
 
         services.AddCommands<Module>(nameof(Core));

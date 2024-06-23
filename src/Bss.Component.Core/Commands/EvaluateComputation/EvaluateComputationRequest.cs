@@ -8,5 +8,5 @@ public class EvaluateComputationRequest
     public string Name { get; set; } = string.Empty;
 
     [Required]
-    public Dictionary<string, object> MeasureValues { get; set; } = [];
+    public Dictionary<string, string> MeasureValues { get; set; } = [];
 }

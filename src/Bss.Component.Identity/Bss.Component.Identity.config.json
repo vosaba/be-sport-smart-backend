@@ -7,6 +7,13 @@
       "ExpireHours": 1
     }
   },
+  "BssIdentityInitializer": {
+    "CreateSuperAdmin": true,
+    "SuperAdminRole": "Admin",
+    "SuperAdminEmail": "super@admin.email",
+    "SuperAdminUserName": "admin",
+    "SuperAdminPassword": "Super1234!"
+  },
   "Components": {
     "SecurityDefinition": {
       "EnabledSecurityDefinitions": "BearerJwt",

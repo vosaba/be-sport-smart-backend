@@ -1,6 +1,7 @@
 ﻿using Bss.Component.Identity.Configuration;
 using Bss.Component.Identity.Data;
 using Bss.Component.Identity.Extensions;
+using Bss.Component.Identity.Jobs;
 using Bss.Component.Identity.Models;
 using Bss.Component.Identity.Services;
 using Bss.Infrastructure.Commands;
@@ -49,6 +50,7 @@ public class Module(IConfiguration configuration)
             .AddEntityFrameworkStores<ApplicationUser, ApplicationUserRole, IIdentityDbContext>();
 
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IdentityInitializerJob>();
 
         services.AddCommands<Module>(nameof(Identity));
     }

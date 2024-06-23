@@ -16,4 +16,7 @@ public class CreateComputationRequest
 
     [Required]
     public string Formula { get; init; } = string.Empty;
+
+    [Required]
+    public bool Disabled { get; init; }
 }

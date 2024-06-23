@@ -9,8 +9,10 @@ public class Computation
         string name,
         ComputationType type,
         ComputationEngine engine,
-        Guid createdBy) 
-        => (Name, Type, Engine, CreatedBy, CreatedAt, UpdatedAt) = (name, type, engine, createdBy, DateTime.UtcNow, DateTime.UtcNow);
+        Guid createdBy,
+        bool disabled) 
+        => (Name, Type, Engine, CreatedBy, CreatedAt, UpdatedAt, Disabled)
+        = (name, type, engine, createdBy, DateTime.UtcNow, DateTime.UtcNow, disabled);
 
     public Guid Id { get; init; }
 
@@ -36,8 +38,8 @@ public class Computation
 
     public DateTime UpdatedAt { get; private set; }
 
-    public void Update(ComputationType type, string name, bool disabled) 
-        => (Type, Name, Disabled, UpdatedAt) = (type, name, disabled, DateTime.UtcNow);
+    public void Update(ComputationType type, ComputationEngine engine, string name, bool disabled) 
+        => (Type, Engine, Name, Disabled, UpdatedAt) = (type, engine, name, disabled, DateTime.UtcNow);
 
     public async Task SetFormula(string formula, IComputationAnalyzer computationAnalyzer)
     {

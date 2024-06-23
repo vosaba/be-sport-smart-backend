@@ -1,6 +1,7 @@
 ﻿using Bss.Component.Core.Configuration;
 using Bss.Component.Core.Models;
 using Bss.Component.Core.Services.ComputationEngines;
+using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Jobs.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.Extensions.Logging;
@@ -22,8 +23,7 @@ public class ComputationEnginesInitializerJob(
 
         if (computationCacheCollection.IsEmpty)
         {
-            logger.LogWarning("Computation cache collection is empty. Skipping initialization.");
-            return;
+            throw new OperationException("Computation cache collection is empty.", OperationErrorCodes.InvalidOperation);
         } 
 
         var computations = computationCacheCollection.GetAll();

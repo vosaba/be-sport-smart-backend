@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bss.Component.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bss.Component.Core.Commands.GetMeasure;
 
 public class GetMeasureRequest
 {
     [Required]
-    public string MeasureId { get; set; } = string.Empty;
+    public Guid Id { get; init; }
 }

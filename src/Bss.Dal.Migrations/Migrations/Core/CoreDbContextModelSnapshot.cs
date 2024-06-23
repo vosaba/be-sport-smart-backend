@@ -86,9 +86,8 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("Disabled")
                         .HasColumnType("boolean");

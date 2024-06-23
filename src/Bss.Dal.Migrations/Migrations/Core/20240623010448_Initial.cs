@@ -20,6 +20,7 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Formula = table.Column<string>(type: "text", nullable: false),
+                    Engine = table.Column<int>(type: "integer", nullable: false),
                     Disabled = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -42,7 +43,7 @@ namespace Bss.Dal.Migrations.Migrations.Core
                     InputSource = table.Column<int>(type: "integer", nullable: false),
                     Options = table.Column<string[]>(type: "text[]", nullable: false),
                     Disabled = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<string>(type: "text", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -50,6 +51,11 @@ namespace Bss.Dal.Migrations.Migrations.Core
                 {
                     table.PrimaryKey("PK_Measures", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Computations_Engine",
+                table: "Computations",
+                column: "Engine");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Computations_Name",

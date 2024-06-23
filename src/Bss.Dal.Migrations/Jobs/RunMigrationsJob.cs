@@ -15,9 +15,7 @@ public class RunMigrationsJob(
     {
         try
         {
-            await Task.WhenAll(
-                coreDbContext.Database.MigrateAsync(cancellationToken),
-                identityDbContext.Database.MigrateAsync(cancellationToken));
+            await MigrateAllDbs(cancellationToken);
         }
         catch (Exception ex)
         {
@@ -25,4 +23,9 @@ public class RunMigrationsJob(
             throw;
         }
     }
+
+    private Task MigrateAllDbs(CancellationToken cancellationToken)
+        => Task.WhenAll(
+            coreDbContext.Database.MigrateAsync(cancellationToken),
+            identityDbContext.Database.MigrateAsync(cancellationToken));
 }

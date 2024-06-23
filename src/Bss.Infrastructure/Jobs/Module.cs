@@ -20,7 +20,10 @@ internal class Module
             config.UseInMemoryStorage();
             config.UseActivator(serviceProvider.GetRequiredService<ServiceProviderJobActivator>());
         });
-        services.AddHangfireServer();
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = 1;
+        });
     }
 
     public void Configure(IApplicationBuilder app, IOptions<JobsConfiguration> jobsConfiguration, IRecurringJobManager recurringJobs)

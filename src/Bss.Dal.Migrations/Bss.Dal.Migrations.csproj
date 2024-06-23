@@ -16,5 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Bss.Dal\Bss.Dal.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Migrations\Core\" />
+  </ItemGroup>
 
 </Project>
