@@ -152,7 +152,7 @@ public static partial class ServiceCollectionExtensions
             : lastPart;
         var parts = nameParts
             .TakeWhile(x => x != CommandConstants.CommandNamespacePart)
-            .Concat(new[] { commandPart })
+            .Concat([commandPart])
             .Select(x => x.ToLowerInvariant())
             .Prepend(CommandConstants.RoutePrefix);
         var route = string.Join('/', parts);
