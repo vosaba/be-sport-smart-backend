@@ -19,7 +19,11 @@
     "OnDemandJobs": [
       {
         "Name": "RunMigrationsJob",
-        "TriggerOnStartup": false
+        "TriggerOnStartup": true
+      },
+      {
+        "Name": "IdentityInitializerJob",
+        "TriggerOnStartup": true
       },
       {
         "Name": "ComputationsCacheRefreshJob",

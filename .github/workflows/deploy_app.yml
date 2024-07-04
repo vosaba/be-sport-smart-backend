@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  DOTNET_VERSION: '8.x'
+  DOTNET_CONFIG: 'Release'
+  DEPLOYMENT_ENVIRONMENT: 'Production'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,20 +21,20 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration ${{ env.DOTNET_CONFIG }}
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/app
+        run: dotnet publish -c ${{ env.DOTNET_CONFIG }} -o ${{ env.DOTNET_ROOT }}/app
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/app
+          name: published-app
+          path: ${{ env.DOTNET_ROOT }}/app
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,13 +43,13 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: published-app
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -58,6 +63,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'app-backend-besportsmart'
-          slot-name: 'Production'
+          slot-name: ${{ env.DEPLOYMENT_ENVIRONMENT }}
           package: .
-          
