@@ -16,7 +16,7 @@ public class GetComputationsHandler(IUserContext userContext, ICoreDbContext dbC
 
         if (request.Name is not null)
         {
-            computations = computations.Where(x => x.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+            computations = computations.Where(x => x.Name.Contains(request.Name));
         }
         if (request.Engine is not null)
         {
