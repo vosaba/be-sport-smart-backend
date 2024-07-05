@@ -28,10 +28,10 @@ public class DeleteMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
             throw new OperationException("Measure is owned by another user.", OperationErrorCodes.Forbidden);
         }
 
-        var consumingComputations = await dbContext
-            .Computations
-            .Where(x => x.RequiredMeasures.Contains(measure.Name))
-            .ToListAsync();
+        var consumingComputations = (await dbContext
+            .Computations.ToListAsync())
+            .Where(x => x.RequiredMeasures.Any( x => x == measure.Name))
+            .ToList();
 
         if (consumingComputations.Count != 0)
         {

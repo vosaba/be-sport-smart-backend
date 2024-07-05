@@ -16,7 +16,7 @@ public class GetMeasuresHandler(IUserContext userContext, ICoreDbContext dbConte
 
         if (request.Name is not null)
         {
-            measures = measures.Where(x => x.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+            measures = measures.Where(x => x.Name.Contains(request.Name));
         }
         if (request.Type is not null)
         {

@@ -28,10 +28,10 @@ public class DeleteComputationHandler(IUserContext userContext, ICoreDbContext d
             throw new OperationException("Consumption is owned by another user.", OperationErrorCodes.Forbidden);
         }
 
-        var consumingComputations = await dbContext
-            .Computations
+        var consumingComputations = (await dbContext
+            .Computations.ToListAsync())
             .Where(x => x.RequiredComputations.Contains(computation.Name))
-            .ToListAsync();
+            .ToList();
 
         if (consumingComputations.Count != 0)
         {
