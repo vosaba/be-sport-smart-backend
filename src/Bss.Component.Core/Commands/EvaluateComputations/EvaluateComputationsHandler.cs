@@ -40,7 +40,6 @@ public class EvaluateComputationsHandler(
             .GetAll()
             .ToDictionary(x => x.Name, x => x.Type);
 
-
         var computationTasks = availableComputations
             .Select(async x =>
             {
@@ -61,22 +60,27 @@ public class EvaluateComputationsHandler(
         Dictionary<string, string> providedValues)
         where TResult : struct
     {
-        if (computation.RequiredMeasures.Count > 0 && !computation.RequiredMeasures.Any(providedValues.ContainsKey))
+        if (computation.RequiredMeasures.Count > 0 && computation.RequiredMeasures.Any(x => !providedValues.ContainsKey(x)))
         {
             return null;
         }
 
         var computationEngine = computationEngineFactory.GetService(computation.Engine);
 
-        var measureValues = computation.RequiredMeasures.Select(x => new MeasureValue(x, measureTypes[x], providedValues[x])).ToArray();
-
         try
         {
+            var measureValues = computation.RequiredMeasures.Select(x => new MeasureValue(x, measureTypes[x], providedValues[x])).ToArray();
+
             return await computationEngine.Evaluate<TResult>(computation, measureValues);
         }
         catch (OperationException ex)
         {
             logger.LogWarning(ex, ex.Message);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message);
             return null;
         }
     }

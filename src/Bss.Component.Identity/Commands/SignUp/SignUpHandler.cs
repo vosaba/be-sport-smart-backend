@@ -12,9 +12,14 @@ public class SignUpHandler(UserManager<ApplicationUser> userManager)
     [ProducesResponseType(typeof(OperationErrorResult), 400)]
     public async Task Handle(SignUpRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.UserName) && string.IsNullOrWhiteSpace(request.Email))
+        {
+            throw new OperationException("Either UserName or Email must be provided.", OperationErrorCodes.InvalidRequest);
+        }
+
         var user = new ApplicationUser
         {
-            UserName = request.UserName,
+            UserName = request.UserName ?? request.Email,
             Email = request.Email,
         };
 

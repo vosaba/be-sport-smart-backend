@@ -4,8 +4,8 @@ public class OperationErrorResult
 {
     public required string ErrorCode { get; init; } = string.Empty;
     public required string ErrorMessage { get; init; } = string.Empty;
-
     public required string[] ErrorDetails { get; init; } = [];
+    public required string Detail { get; init; } = string.Empty;
 
     public static OperationErrorResult FromException(Exception exception)
     {
@@ -15,7 +15,8 @@ public class OperationErrorResult
             {
                 ErrorCode = operationException.ErrorCode,
                 ErrorMessage = operationException.Message,
-                ErrorDetails = operationException.ErrorDetails.ToArray()
+                ErrorDetails = operationException.ErrorDetails.ToArray(),
+                Detail = operationException.ErrorDetails.Any() ? operationException.ErrorDetails.First() : operationException.Message
             };
         }
 
@@ -23,7 +24,8 @@ public class OperationErrorResult
         {
             ErrorCode = OperationErrorCodes.InternalError,
             ErrorMessage = exception.Message,
-            ErrorDetails = []
+            ErrorDetails = [],
+            Detail = exception.Message
         };
     }
 }
