@@ -69,7 +69,10 @@ public class EvaluateComputationsHandler(
 
         try
         {
-            var measureValues = computation.RequiredMeasures.Select(x => new MeasureValue(x, measureTypes[x], providedValues[x])).ToArray();
+            var measureValues = providedValues
+                .Where(x => measureTypes.ContainsKey(x.Key))
+                .Select(x => new MeasureValue(x.Key, measureTypes[x.Key], x.Value))
+                .ToArray();
 
             return await computationEngine.Evaluate<TResult>(computation, measureValues);
         }
