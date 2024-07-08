@@ -1,13 +1,15 @@
 ﻿using Bss.Component.Core.Data;
+using Bss.Component.Core.Events.MeasureListChange;
 using Bss.Component.Core.Models;
 using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Identity.Abstractions;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Bss.Component.Core.Commands.Admin.UpdateMeasure;
 
 [Authorize(Roles = "Admin")]
-public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbContext)
+public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbContext, IMediator mediator)
 {
     public async Task Handle(UpdateMeasureRequest request)
     {
@@ -26,5 +28,6 @@ public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
         measure.Update(request.Name, request.Type, request.InputSource, request.Options, request.Disabled);
 
         await dbContext.SaveChangesAsync();
+        await mediator.Publish(new MeasureListChangeEvent());
     }
 }
