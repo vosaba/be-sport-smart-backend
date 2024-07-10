@@ -35,7 +35,7 @@
       },
       {
         "Name": "ComputationEnginesRefreshJob",
-        "TriggerOnStartup": true
+        "TriggerOnStartup": false
       }
     ]
   }

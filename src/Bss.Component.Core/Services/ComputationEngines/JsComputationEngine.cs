@@ -1,5 +1,6 @@
 ﻿using Bss.Component.Core.Enums;
 using Bss.Component.Core.Models;
+using Bss.Infrastructure;
 using Bss.Infrastructure.Errors.Abstractions;
 using Jint;
 using Microsoft.Extensions.Logging;
@@ -7,9 +8,35 @@ using Microsoft.Extensions.Logging;
 namespace Bss.Component.Core.Services.ComputationEngines;
 
 internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : IComputationEngine
-{
-    private readonly Engine _engine = new();
+{   private const string InternalContextModule = "internal_context";
+    private readonly Engine _engine = new(cfg => { 
+        cfg.AllowClr(); 
+        cfg.Strict();
+    });
     private List<Computation>? _computations;
+
+    private void InitializeEngineInternalContext()
+    {
+        const string contextModule = @"
+            const internal_context = {
+                metrics: {},
+                scores: {},
+                sports: {},
+                clearContext: function() {
+                    this.metrics = {};
+                    this.scores = {};
+                    this.sports = {};
+                },
+                addComputation: function(type, name, formula) {
+                    if (typeof this[type] === 'undefined') {
+                        throw new Error(`Invalid context area: ${type}`);
+                    }
+                    this[type][name] = formula;
+                }
+            };
+        ";
+        _engine.Execute(contextModule);
+    }
 
     public bool ContextInitialized => _computations is not null;
 
@@ -18,20 +45,25 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
 
     public bool ContextEmpty => _computations is not null && _computations.Count > 0;
 
-    public void ClearContext() 
+    public void ClearContext()
     {
         if (_computations is null)
         {
             throw new OperationException("Context not initialized.");
         }
 
-        _computations.Clear(); 
+        _computations.Clear();
+        _engine.Execute("internal_context.clearContext();");
     }
 
     public void RefreshContext(IEnumerable<Computation> computations)
     {
-        _computations ??= [];
-        _engine.Execute($"internal_context = {{}};");
+        if (_computations is null)
+        {
+            InitializeEngineInternalContext();
+        }
+
+        _computations ??= new List<Computation>();
 
         foreach (var computation in computations)
         {
@@ -45,8 +77,9 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
 
             try
             {
-                _engine.Execute($"if (typeof internal_context.{contextArea} === 'undefined') {{ internal_context.{contextArea} = {{}}; }}");
-                _engine.Execute($"internal_context.{contextArea}['{computation.Name}'] = {computation.Formula};");
+                _engine.Execute($@"
+                    internal_context.addComputation('{contextArea}', '{computation.Name}', {computation.Formula});
+                ");
                 _computations.Add(computation);
             }
             catch (Exception ex)
@@ -68,18 +101,21 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
 
         try
         {
-            var measuresString = GetMeasuresJson(measureValues);
-            var functionString = GetComputationFunction(computation);
-            var evaluationResult = _engine.Evaluate($"{functionString}({measuresString});");
-
-            // TODO: add more flexible result handling
-            return typeof(TResult) switch
+            lock (_engine)
             {
-                Type t when t == typeof(double) => (TResult)(object)evaluationResult.AsNumber(),
-                Type t when t == typeof(bool) => (TResult)(object)evaluationResult.AsBoolean(),
-                Type t when t == typeof(string) => (TResult)(object)evaluationResult.AsString(),
-                _ => throw new OperationException($"Unsupported result type: {typeof(TResult)}"),
-            };
+                var measuresString = GetMeasuresJson(measureValues);
+                var functionString = GetComputationFunction(computation);
+                var evaluationResult = _engine.Evaluate($"{functionString}({measuresString});");
+
+                // TODO: add more flexible result handling
+                return typeof(TResult) switch
+                {
+                    Type t when t == typeof(double) => (TResult)(object)evaluationResult.AsNumber(),
+                    Type t when t == typeof(bool) => (TResult)(object)evaluationResult.AsBoolean(),
+                    Type t when t == typeof(string) => (TResult)(object)evaluationResult.AsString(),
+                    _ => throw new OperationException($"Unsupported result type: {typeof(TResult)}"),
+                };
+            }
         }
         catch (Exception ex)
         {
@@ -91,7 +127,7 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
     {
         var existingComputation = Context
             .Where(x => x.Name == computation.Name)
-            .SingleOrDefault() 
+            .SingleOrDefault()
             ?? throw new NotFoundException(computation.Name, nameof(Computation));
 
         var missingMeasure = measureValues.FirstOrDefault(measureValue => !existingComputation.RequiredMeasures.Contains(measureValue.Name));
@@ -103,7 +139,10 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
         return;
     }
 
-    public void Dispose() => _engine.Dispose();
+    public void Dispose()
+    {
+        _engine.Dispose();
+    }
 
     private string GetMeasuresJson(params MeasureValue[] measureValues)
     {
@@ -134,14 +173,14 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
                         return result;
                     }
                 case MeasureType.String:
-                    return $"\"{measureValue.Value}\"";
+                    return $"'{measureValue.Value}'";
                 default:
                     LogDefaultValueUsage(measureValue, measureValue.Value);
                     return measureValue.Value;
             }
         }
 
-        void LogDefaultValueUsage(MeasureValue measureValue, string usedValue) 
+        void LogDefaultValueUsage(MeasureValue measureValue, string usedValue)
             => logger.LogWarning("Default value set for key '{name}'. Original value: '{value}', Default value: '{usedValue}'", measureValue.Name, measureValue.Value, usedValue);
 
         return $"{{{string.Join(",", measureValues.Select(x => $"'{x.Name}': {FormatValue(x)}"))}}}";
@@ -156,15 +195,10 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
             _ => throw new OperationException($"Invalid computation type: {computation.Type} for evaluation")
         };
 
-        return @$"(function(measures) 
-        {{ 
-            var context = {{ 
-                measures: measures, 
-                metrics: internal_context.metrics, 
-                scores: internal_context.scores 
-            }};
-                    
-            return internal_context.{contextArea}.{computation.Name}(context); 
-        }})";
+        return @$"((measures) => internal_context.{contextArea}.{computation.Name}({{ 
+            measures: measures, 
+            metrics: internal_context.metrics, 
+            scores: internal_context.scores
+        }}))";
     }
 }
