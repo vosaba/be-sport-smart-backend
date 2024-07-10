@@ -6,6 +6,8 @@ namespace Bss.Component.Core.Commands.EvaluateComputations;
 
 public class EvaluateComputationsRequest
 {
+    public string[] Names { get; set; } = [];
+
     [Required]
     [EnumSubset(ComputationType.Sport, ComputationType.Metric)]
     public ComputationType Type { get; set; }

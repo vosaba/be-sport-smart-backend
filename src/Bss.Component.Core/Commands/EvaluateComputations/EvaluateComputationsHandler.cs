@@ -36,6 +36,12 @@ public class EvaluateComputationsHandler(
             .GetAll()
             .Where(x => x.Type == request.Type);
 
+        if (request.Names.Length > 0)
+        {
+            availableComputations = availableComputations
+                .Where(x => request.Names.Contains(x.Name));
+        }
+
         var availableMeasures = measureCacheCollection
             .GetAll()
             .ToDictionary(x => x.Name, x => x.Type);
