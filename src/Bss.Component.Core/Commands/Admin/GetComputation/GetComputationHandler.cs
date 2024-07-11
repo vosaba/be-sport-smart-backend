@@ -21,10 +21,6 @@ public class GetComputationHandler(IUserContext userContext, ICoreDbContext dbCo
         {
             throw new NotFoundException<Computation>(request.Id);
         }
-        else if (computation.CreatedBy != userContext.UserId)
-        {
-            throw new OperationException("Computation is owned by another user.", OperationErrorCodes.Forbidden);
-        }
 
         return new ComputationDto
         {

@@ -11,8 +11,7 @@ public class GetMeasuresHandler(IUserContext userContext, ICoreDbContext dbConte
 {
     public async Task<MeasureDto[]> Handle(GetMeasuresRequest request)
     {
-        var measures = dbContext.Measures
-            .Where(x => x.CreatedBy == userContext.UserId);
+        var measures = dbContext.Measures;
 
         if (request.Name is not null)
         {

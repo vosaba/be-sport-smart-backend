@@ -21,10 +21,6 @@ public class GetMeasureHandler(IUserContext userContext, ICoreDbContext dbContex
         {
             throw new NotFoundException<Measure>(request.Id);
         }
-        else if (measure.CreatedBy != userContext.UserId)
-        {
-            throw new OperationException("Measure is owned by another user.", OperationErrorCodes.Forbidden);
-        }
 
         return new MeasureDto
         {

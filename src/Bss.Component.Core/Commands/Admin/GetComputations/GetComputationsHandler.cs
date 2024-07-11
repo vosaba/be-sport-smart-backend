@@ -11,8 +11,7 @@ public class GetComputationsHandler(IUserContext userContext, ICoreDbContext dbC
 {
     public async Task<ComputationDto[]> Handle(GetComputationsRequest request)
     {
-        var computations = dbContext.Computations
-            .Where(x => x.CreatedBy == userContext.UserId);
+        var computations = dbContext.Computations;
 
         if (request.Name is not null)
         {
