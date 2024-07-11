@@ -17,10 +17,10 @@ internal class Module
     public void Configure(IApplicationBuilder app, IOptions<SecurityConfiguration> securityConfig)
     {
         app.UseCors(x => x
-         .WithOrigins(securityConfig.Value.AllowedOrigins)
-         .AllowAnyMethod()
-         .AllowAnyHeader()
-         .AllowCredentials());
+            .WithOrigins(securityConfig.Value.AllowedOrigins)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
 
         app.UseHttpsRedirection();
 

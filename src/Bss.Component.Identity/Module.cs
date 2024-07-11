@@ -8,6 +8,7 @@ using Bss.Infrastructure.Commands;
 using Bss.Infrastructure.Configuration;
 using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +24,7 @@ public class Module(IConfiguration configuration)
 
         services.AddHttpContextAccessor();
 
-        services.AddAuthentication(option =>
+        var t = services.AddAuthentication(option =>
         {
             option.DefaultAuthenticateScheme =
             option.DefaultChallengeScheme =
@@ -49,6 +50,13 @@ public class Module(IConfiguration configuration)
         services.AddIdentity<ApplicationUser, ApplicationUserRole>()
             .AddEntityFrameworkStores<ApplicationUser, ApplicationUserRole, IIdentityDbContext>();
 
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
+
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IdentityInitializerJob>();
 
@@ -57,7 +65,5 @@ public class Module(IConfiguration configuration)
 
     public void Configure(IApplicationBuilder app)
     {
-        app.UseAuthentication();
-        app.UseAuthorization();
     }
 }
