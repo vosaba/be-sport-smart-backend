@@ -5,10 +5,13 @@ namespace Bss.Component.Core.Models;
 public class Measure(
     string name,
     MeasureType type,
-    MeasureSource inputSource,
+    double? minValue,
+    double? maxValue,
+    MeasureAvailability availability,
     Guid createdBy,
     bool disabled,
-    string[] options)
+    string[] options,
+    int order)
 {
     public Guid Id { get; init; }
 
@@ -16,7 +19,13 @@ public class Measure(
 
     public MeasureType Type { get; private set; } = type;
 
-    public MeasureSource InputSource { get; private set; } = inputSource;
+    public double? MinValue { get; private set; } = minValue;
+
+    public double? MaxValue { get; private set; } = maxValue;
+
+    public int Order { get; private set; } = order;
+
+    public MeasureAvailability Availability { get; private set; } = availability;
 
     public string[] Options { get; private set; } = options;
 
@@ -31,15 +40,30 @@ public class Measure(
     public void Update(
         string name,
         MeasureType type,
-        MeasureSource inputSource,
+        double? minValue,
+        double? maxValue,
+        MeasureAvailability availability,
         string[] options,
-        bool disabled)
+        bool disabled,
+        int order)
     {
         Name = name;
         Type = type;
-        InputSource = inputSource;
+        MinValue = minValue;
+        MaxValue = maxValue;
+        Availability = availability;
         Options = options;
         Disabled = disabled;
+        Order = order;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    public bool IsVisibleForUser(bool isSignedIn)
+        => !Disabled 
+        && (Availability == MeasureAvailability.NoRestriction 
+            || (isSignedIn && (Availability == MeasureAvailability.User || Availability == MeasureAvailability.UserReadonly)));
+
+    public bool IsMeasurableByUser(bool isSignedIn)
+        => !Disabled
+        && (Availability == MeasureAvailability.NoRestriction || isSignedIn && (Availability == MeasureAvailability.User));
 }

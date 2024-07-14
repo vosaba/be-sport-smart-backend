@@ -25,7 +25,8 @@ public class CreateComputationHandler(
             request.Type,
             request.Engine,
             userContext.UserId,
-            request.Disabled);
+            request.Disabled,
+            request.Availability);
 
         await computation.SetFormula(request.Formula, computationAnalyzer);
 

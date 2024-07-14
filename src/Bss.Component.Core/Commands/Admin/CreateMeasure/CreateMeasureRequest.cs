@@ -11,8 +11,13 @@ public class CreateMeasureRequest
     [Required]
     public MeasureType Type { get; init; }
 
-    [Required]
-    public MeasureSource InputSource { get; init; }
+    public double? MinValue { get; init; }
+
+    public double? MaxValue { get; init; }
+
+    public int Order { get; init; } = 1000;
+
+    public MeasureAvailability Availability { get; init; } = MeasureAvailability.NoRestriction;
 
     [Required]
     public string[] Options { get; init; } = [];

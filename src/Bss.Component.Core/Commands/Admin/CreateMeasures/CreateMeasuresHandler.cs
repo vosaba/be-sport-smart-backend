@@ -17,10 +17,13 @@ public class CreateMeasuresHandler(IUserContext userContext, ICoreDbContext dbCo
             var measure = new Measure(
                 createMeasure.Name,
                 createMeasure.Type,
-                createMeasure.InputSource,
+                createMeasure.MinValue,
+                createMeasure.MaxValue,
+                createMeasure.Availability,
                 userContext.UserId,
                 createMeasure.Disabled,
-                createMeasure.Options);
+                createMeasure.Options,
+                createMeasure.Order);
 
             dbContext.Push(measure);
         }   

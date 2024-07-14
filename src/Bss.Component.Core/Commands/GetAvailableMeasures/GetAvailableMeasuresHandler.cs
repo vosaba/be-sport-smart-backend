@@ -1,5 +1,6 @@
 ﻿using Bss.Component.Core.Dto;
 using Bss.Component.Core.Models;
+using Bss.Infrastructure.Identity.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -8,10 +9,11 @@ namespace Bss.Component.Core.Commands.GetAvailableMeasures;
 
 [AllowAnonymous]
 public class GetAvailableMeasuresHandler(
+    IUserContext userContext,
     ILogger<GetAvailableMeasuresHandler> logger,
     ILocalCacheCollection<Measure> measuresCacheCollection)
 {
-    public async Task<AvailableMeasureDto[]> Handle(GetAvailableMeasuresRequest request)
+    public async Task<AvailableMeasureDto[]> Handle(GetAvailableMeasuresRequest _)
     {
         if (measuresCacheCollection.IsEmpty)
         {
@@ -20,15 +22,19 @@ public class GetAvailableMeasuresHandler(
 
         var availableMeasures = measuresCacheCollection
             .GetAll()
-            .Where(x => request.Sources.Contains(x.InputSource));
+            .Where(x => x.IsVisibleForUser(userContext.IsAuthenticated));
 
         return availableMeasures
-            .OrderBy(x => x.InputSource)
+            .OrderBy(x => x.Order)
+            .ThenBy(x => x.Availability)
             .Select(x => new AvailableMeasureDto
             {
                 Name = x.Name,
                 Type = x.Type,
-                InputSource = x.InputSource,
+                MinValue = x.MinValue,
+                MaxValue = x.MaxValue,
+                Availability = x.Availability,
+                MeasurableByUser = x.IsMeasurableByUser(userContext.IsAuthenticated),
                 Options = x.Options,
             })
             .ToArray();

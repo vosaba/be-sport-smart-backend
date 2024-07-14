@@ -8,7 +8,7 @@ public class GetMeasuresRequest
 
     public MeasureType? Type { get; init; }
 
-    public MeasureSource? InputSource { get; init; }
+    public MeasureAvailability? Availability { get; init; }
 
     public bool? Disabled { get; init; }
 }

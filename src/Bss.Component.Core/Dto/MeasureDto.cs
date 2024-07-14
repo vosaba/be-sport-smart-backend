@@ -10,7 +10,13 @@ public record MeasureDto
 
     public required MeasureType Type { get; init; }
 
-    public required MeasureSource InputSource { get; init; }
+    public required double? MinValue { get; init; }
+
+    public required double? MaxValue { get; init; }
+
+    public required int Order { get; init; }
+
+    public required MeasureAvailability Availability { get; init; }
 
     public required string[] Options { get; init; } = [];
 

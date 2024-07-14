@@ -15,10 +15,13 @@ public class CreateMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
         var measure = new Measure(
             request.Name,
             request.Type,
-            request.InputSource,
+            request.MinValue,
+            request.MaxValue,
+            request.Availability,
             userContext.UserId,
             request.Disabled,
-            request.Options);
+            request.Options,
+            request.Order);
 
         dbContext.Push(measure);
 

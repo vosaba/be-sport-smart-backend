@@ -19,5 +19,9 @@ public class ComputationConfiguration : IEntityTypeConfiguration<Computation>
         builder.Property("_requiredMeasures")
             .HasColumnName("RequiredMeasures")
             .HasColumnType("text[]");
+
+        builder.Property(x => x.Availability)
+            .HasConversion<int>()
+            .IsRequired();
     }
 }

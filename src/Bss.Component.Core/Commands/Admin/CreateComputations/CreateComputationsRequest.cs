@@ -12,7 +12,9 @@ public record class CreateComputation
     public string Name { get; init; } = string.Empty;
 
     [Required]
-    public string Formula { get; init; } = string.Empty;   
+    public string Formula { get; init; } = string.Empty;
+
+    public ComputationAvailability? Availability { get; init; }
 }
 
 public class CreateComputationsRequest

@@ -34,7 +34,7 @@ public class UpdateComputationsHandler(
                 throw new OperationException("Computation is owned by another user.", OperationErrorCodes.Forbidden);
             }
 
-            computation.Update(computationUpdate.Type, computationUpdate.Engine, computationUpdate.Name, computationUpdate.Disabled);
+            computation.Update(computationUpdate.Type, computationUpdate.Engine, computationUpdate.Name, computationUpdate.Disabled, computationUpdate.Availability);
 
             var computationAnalyzer = computationAnalyzerFactory.GetService(computation.Engine);
 

@@ -22,6 +22,8 @@ public record class UpdateComputation
 
     [Required]
     public string Formula { get; init; } = string.Empty;
+
+    public ComputationAvailability? Availability { get; init; }
 }
 
 public class UpdateComputationsRequest

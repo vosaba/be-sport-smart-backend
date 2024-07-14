@@ -15,7 +15,6 @@ internal class ComputationListChangeEventHandler(
         logger.LogTrace("Computation list change event received.");
 
         jobRunner.Trigger<ComputationsCacheRefreshJob>();
-        jobRunner.Trigger<ComputationEnginesRefreshJob>();
 
         logger.LogTrace("Computation list change event handled.");
     }

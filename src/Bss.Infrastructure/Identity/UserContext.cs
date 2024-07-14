@@ -9,6 +9,8 @@ internal class UserContext(IHttpContextAccessor httpContextAccessor)
 {
     private readonly ClaimsPrincipal? _claimsPrincipal = httpContextAccessor.HttpContext?.User;
 
+    public bool IsAuthenticated => _claimsPrincipal?.Identity?.IsAuthenticated ?? false;
+
     public Guid UserId => Guid.Parse(_claimsPrincipal?.FindFirstValue(ClaimTypes.NameIdentifier) 
         ?? throw new InvalidOperationException("User id claim is missing."));
 

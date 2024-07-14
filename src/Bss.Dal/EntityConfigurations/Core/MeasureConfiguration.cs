@@ -13,6 +13,10 @@ public class MeasureConfiguration : IEntityTypeConfiguration<Measure>
 
         builder.Property(i => i.Options)
             .HasColumnType("text[]");
+
+        builder.Property(x => x.Availability)
+            .HasConversion<int>()
+            .IsRequired();
     }
 }
 

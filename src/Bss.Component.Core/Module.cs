@@ -1,7 +1,9 @@
 ﻿using Bss.Component.Core.Enums;
 using Bss.Component.Core.Jobs;
+using Bss.Component.Core.Services;
 using Bss.Component.Core.Services.ComputationAnalyzers;
 using Bss.Component.Core.Services.ComputationEngines;
+using Bss.Component.Core.Services.ComputationRequirements;
 using Bss.Infrastructure.Commands;
 using Bss.Infrastructure.Shared.Extensions;
 using MediatR;
@@ -14,6 +16,9 @@ public class Module
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton<IMeasureValueService, MeasureValueService>();
+        services.AddSingleton<IComputationRequirementService, ComputationRequirementService>();
+
         services.AddSingleton<JsComputationEngine>();
         services.AddSingleton<DummyComputationEngine>();
 
@@ -33,6 +38,7 @@ public class Module
         services.AddScoped<MeasuresCacheRefreshJob>();
         services.AddScoped<ComputationsCacheRefreshJob>();
         services.AddScoped<ComputationEnginesRefreshJob>();
+        services.AddScoped<ComputationMeasureRequirementsRefreshJob>();
 
         services.AddCommands<Module>(nameof(Core), filters: [type => !IsAdminCommand(type)]);
         services.AddCommands<Module>(nameof(Core), "admin", [IsAdminCommand]);

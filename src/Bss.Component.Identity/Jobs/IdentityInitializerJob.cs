@@ -38,7 +38,7 @@ public class IdentityInitializerJob(
         var admin = new ApplicationUser
         {
             UserName = config.SuperAdminUserName,
-            Email = config.SuperAdminRole,
+            Email = config.SuperAdminEmail,
         };
 
         var result = await userManager.CreateAsync(admin, config.SuperAdminPassword);

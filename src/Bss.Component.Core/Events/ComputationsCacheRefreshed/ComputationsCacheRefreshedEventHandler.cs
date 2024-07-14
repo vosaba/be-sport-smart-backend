@@ -15,6 +15,7 @@ internal class ComputationsCacheRefreshedEventHandler(
         logger.LogTrace("ComputationsCacheRefreshed event received.");
 
         jobRunner.Trigger<ComputationEnginesRefreshJob>();
+        jobRunner.Trigger<ComputationMeasureRequirementsRefreshJob>();
 
         logger.LogTrace("ComputationsCacheRefreshed event handled.");
     }

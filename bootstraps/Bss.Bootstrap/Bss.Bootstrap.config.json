@@ -26,15 +26,19 @@
         "TriggerOnStartup": true
       },
       {
-        "Name": "ComputationsCacheRefreshJob",
-        "TriggerOnStartup": true
-      },
-      {
         "Name": "MeasuresCacheRefreshJob",
         "TriggerOnStartup": true
       },
       {
+        "Name": "ComputationsCacheRefreshJob",
+        "TriggerOnStartup": true
+      },
+      {
         "Name": "ComputationEnginesRefreshJob",
+        "TriggerOnStartup": false
+      },
+      {
+        "Name": "ComputationMeasureRequirementsRefreshJob",
         "TriggerOnStartup": false
       }
     ]

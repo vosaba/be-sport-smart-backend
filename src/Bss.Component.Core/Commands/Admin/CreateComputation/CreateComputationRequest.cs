@@ -19,4 +19,6 @@ public class CreateComputationRequest
 
     [Required]
     public bool Disabled { get; init; }
+
+    public ComputationAvailability? Availability { get; init; }
 }

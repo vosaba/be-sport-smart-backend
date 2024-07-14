@@ -21,9 +21,9 @@ public class GetMeasuresHandler(IUserContext userContext, ICoreDbContext dbConte
         {
             measures = measures.Where(x => x.Type == request.Type);
         }
-        if (request.InputSource is not null)
+        if (request.Availability is not null)
         {
-            measures = measures.Where(x => x.InputSource == request.InputSource);
+            measures = measures.Where(x => x.Availability == request.Availability);
         }
         if (request.Disabled is not null)
         {
@@ -36,7 +36,10 @@ public class GetMeasuresHandler(IUserContext userContext, ICoreDbContext dbConte
                 Id = x.Id,
                 Name = x.Name,
                 Type = x.Type,
-                InputSource = x.InputSource,
+                MinValue = x.MinValue,
+                MaxValue = x.MaxValue,
+                Order = x.Order,
+                Availability = x.Availability,
                 Disabled = x.Disabled,
                 Options = x.Options
             }).ToArray();

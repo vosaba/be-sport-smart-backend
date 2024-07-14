@@ -2,6 +2,8 @@
 
 public interface IUserContext
 {
+    bool IsAuthenticated { get; }
+
     Guid UserId { get; }
 
     string? UserName { get; }

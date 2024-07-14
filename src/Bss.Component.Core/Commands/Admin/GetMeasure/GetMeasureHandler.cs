@@ -27,7 +27,10 @@ public class GetMeasureHandler(IUserContext userContext, ICoreDbContext dbContex
             Id = measure.Id,
             Name = measure.Name,
             Type = measure.Type,
-            InputSource = measure.InputSource,
+            MinValue = measure.MinValue,
+            MaxValue = measure.MaxValue,
+            Order = measure.Order,
+            Availability = measure.Availability,
             Disabled = measure.Disabled,
             Options = measure.Options
         };

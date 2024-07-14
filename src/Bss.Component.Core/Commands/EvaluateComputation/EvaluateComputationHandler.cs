@@ -1,19 +1,23 @@
 ﻿using Bss.Component.Core.Models;
+using Bss.Component.Core.Services;
 using Bss.Component.Core.Services.ComputationEngines;
+using Bss.Component.Core.Services.ComputationRequirements;
 using Bss.Infrastructure.Errors.Abstractions;
+using Bss.Infrastructure.Identity.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace Bss.Component.Core.Commands.EvaluateComputation;
 
 [AllowAnonymous]
 public class EvaluateComputationHandler(
+    IUserContext userContext,
     ILogger<EvaluateComputationHandler> logger,
+    IMeasureValueService measureValueService,
+    IComputationRequirementService computationRequirementService,
     IServiceFactory<IComputationEngine> computationEngineFactory,
-    ILocalCacheCollection<Computation> computationCacheCollection,
-    ILocalCacheCollection<Measure> measureCacheCollection)
+    ILocalCacheCollection<Computation> computationCacheCollection)
 {
     public async Task<EvaluateComputationResponse> Handle(EvaluateComputationRequest request)
     {
@@ -22,40 +26,25 @@ public class EvaluateComputationHandler(
             logger.LogWarning("Computation cache is empty.");
         }
 
-        if (measureCacheCollection.IsEmpty)
-        {
-            logger.LogWarning("Measure cache is empty.");
-        }
-
         var availableComputations = computationCacheCollection.GetAll();
 
         var computation = availableComputations
-            .SingleOrDefault(x => x.Name == request.Name) 
+            .SingleOrDefault(x =>
+                x.Name == request.Name
+                && x.IsExecutableByUser(userContext.IsAuthenticated)) 
             ?? throw new NotFoundException(request.Name, nameof(Computation));
 
-        if (computation.RequiredMeasures.Count > 0 && computation.RequiredMeasures.Any(x => !request.MeasureValues.ContainsKey(x)))
-        {
-            throw new OperationException(
-                "Missing measure values.", 
-                computation.RequiredMeasures.Except(request.MeasureValues.Keys),
-                OperationErrorCodes.InvalidRequest);
-        }
+        var measureValues = measureValueService
+            .GetValidMeasureValues(request.MeasureValues)
+            .ToArray();
+
+        computationRequirementService.EnsureRequiredMeasureProvided(computation, measureValues);
 
         var computationEngine = computationEngineFactory.GetService(computation.Engine);
         if (!computationEngine.ContextInitialized)
         {
             logger.LogWarning("Computation engine context not initialized.");
         }
-
-        var availableMeasures = measureCacheCollection
-            .GetAll()
-            //.Where(x => computation.RequiredMeasures.Contains(x.Name))
-            .ToDictionary(x => x.Name, x => x.Type);
-
-        var measureValues = request.MeasureValues
-            .Where(x => availableMeasures.ContainsKey(x.Key))
-            .Select(x => new MeasureValue(x.Key, availableMeasures[x.Key], x.Value))
-            .ToArray();
 
         var result = await computationEngine.Evaluate<double>(computation, measureValues);
         return new EvaluateComputationResponse

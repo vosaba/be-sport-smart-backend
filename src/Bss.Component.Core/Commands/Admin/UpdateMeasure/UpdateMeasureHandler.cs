@@ -25,7 +25,15 @@ public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
             throw new OperationException("Measure is owned by another user.", OperationErrorCodes.Forbidden);
         }
         
-        measure.Update(request.Name, request.Type, request.InputSource, request.Options, request.Disabled);
+        measure.Update(
+            request.Name,
+            request.Type,
+            request.MinValue,
+            request.MaxValue,
+            request.Availability,
+            request.Options,
+            request.Disabled,
+            request.Order);
 
         await dbContext.SaveChangesAsync();
         await mediator.Publish(new MeasureListChangeEvent());
