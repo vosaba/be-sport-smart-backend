@@ -1,6 +1,6 @@
 ﻿using Bss.Component.Core.Enums;
 
-namespace Bss.Component.Core.Models;
+namespace Bss.Component.Core.Data.Models;
 
 public class Measure(
     string name,

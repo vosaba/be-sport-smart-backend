@@ -1,6 +1,6 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Core.Events.MeasureListChange;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Infrastructure.Identity.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

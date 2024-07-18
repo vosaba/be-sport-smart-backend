@@ -1,6 +1,6 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Core.Events.ComputationListChange;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Component.Core.Services.ComputationAnalyzers;
 using Bss.Infrastructure.Identity.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;

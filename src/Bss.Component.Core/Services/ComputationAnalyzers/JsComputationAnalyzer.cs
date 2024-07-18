@@ -1,5 +1,5 @@
 ﻿using Bss.Component.Core.Data;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Infrastructure.Errors.Abstractions;
 using Jint;
 using Microsoft.EntityFrameworkCore;

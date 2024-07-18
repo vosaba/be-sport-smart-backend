@@ -1,5 +1,5 @@
 ﻿using Bss.Component.Core.Dto;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Component.Core.Services;
 using Bss.Component.Core.Services.ComputationEngines;
 using Bss.Component.Core.Services.ComputationRequirements;
@@ -9,7 +9,7 @@ using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Component.Core.Commands.EvaluateComputations;
+namespace Bss.Component.Core.Commands.Computations.EvaluateComputations;
 
 [AllowAnonymous]
 public class EvaluateComputationsHandler(

@@ -1,4 +1,4 @@
-﻿using Bss.Component.Core.Models;
+﻿using Bss.Component.Core.Data.Models;
 using Bss.Component.Core.Services;
 using Bss.Component.Core.Services.ComputationEngines;
 using Bss.Component.Core.Services.ComputationRequirements;
@@ -8,7 +8,7 @@ using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Component.Core.Commands.EvaluateComputation;
+namespace Bss.Component.Core.Commands.Computations.EvaluateComputation;
 
 [AllowAnonymous]
 public class EvaluateComputationHandler(
@@ -31,7 +31,7 @@ public class EvaluateComputationHandler(
         var computation = availableComputations
             .SingleOrDefault(x =>
                 x.Name == request.Name
-                && x.IsExecutableByUser(userContext.IsAuthenticated)) 
+                && x.IsExecutableByUser(userContext.IsAuthenticated))
             ?? throw new NotFoundException(request.Name, nameof(Computation));
 
         var measureValues = measureValueService

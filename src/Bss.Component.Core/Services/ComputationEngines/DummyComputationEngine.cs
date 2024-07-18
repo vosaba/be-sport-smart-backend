@@ -1,5 +1,5 @@
 ﻿using Bss.Component.Core.Enums;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 
 namespace Bss.Component.Core.Services.ComputationEngines;
 

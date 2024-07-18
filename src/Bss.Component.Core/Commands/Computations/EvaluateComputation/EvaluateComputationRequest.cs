@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.EvaluateComputation;
+namespace Bss.Component.Core.Commands.Computations.EvaluateComputation;
 
 public class EvaluateComputationRequest
 {

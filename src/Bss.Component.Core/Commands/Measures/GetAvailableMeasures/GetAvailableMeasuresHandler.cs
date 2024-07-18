@@ -1,11 +1,11 @@
 ﻿using Bss.Component.Core.Dto;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Infrastructure.Identity.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Component.Core.Commands.GetAvailableMeasures;
+namespace Bss.Component.Core.Commands.Measures.GetAvailableMeasures;
 
 [AllowAnonymous]
 public class GetAvailableMeasuresHandler(

@@ -1,6 +1,6 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Core.Events.ComputationsCacheRefreshed;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Infrastructure.Jobs.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
 using MediatR;

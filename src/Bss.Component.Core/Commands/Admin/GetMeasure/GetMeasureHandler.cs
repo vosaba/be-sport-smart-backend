@@ -1,6 +1,6 @@
 ﻿using Bss.Component.Core.Data;
 using Bss.Component.Core.Dto;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;

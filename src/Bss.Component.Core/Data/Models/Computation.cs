@@ -2,7 +2,7 @@
 using Bss.Component.Core.Services.ComputationAnalyzers;
 using Bss.Infrastructure.Errors.Abstractions;
 
-namespace Bss.Component.Core.Models;
+namespace Bss.Component.Core.Data.Models;
 
 public class Computation
 {

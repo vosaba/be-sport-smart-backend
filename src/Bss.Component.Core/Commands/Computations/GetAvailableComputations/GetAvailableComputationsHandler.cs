@@ -1,5 +1,5 @@
 ﻿using Bss.Component.Core.Dto;
-using Bss.Component.Core.Models;
+using Bss.Component.Core.Data.Models;
 using Bss.Component.Core.Services;
 using Bss.Component.Core.Services.ComputationRequirements;
 using Bss.Infrastructure.Identity.Abstractions;
@@ -7,7 +7,7 @@ using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Component.Core.Commands.GetAvailableComputations;
+namespace Bss.Component.Core.Commands.Computations.GetAvailableComputations;
 
 [AllowAnonymous]
 public class GetAvailableComputationsHandler(
@@ -27,7 +27,7 @@ public class GetAvailableComputationsHandler(
         var availableComputations = computationCacheCollection
             .GetAll()
             .Where(x =>
-                x.Type == request.Type 
+                x.Type == request.Type
                 && x.IsExecutableByUser(userContext.IsAuthenticated));
 
         if (request.MeasureValues is not null)

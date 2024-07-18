@@ -2,16 +2,14 @@
 using Bss.Infrastructure.Shared.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Component.Core.Commands.EvaluateComputations;
+namespace Bss.Component.Core.Commands.Computations.GetAvailableComputations;
 
-public class EvaluateComputationsRequest
+public class GetAvailableComputationsRequest
 {
-    public string[] Names { get; set; } = [];
-
     [Required]
     [EnumSubset(ComputationType.Sport, ComputationType.Metric)]
     public ComputationType Type { get; set; }
 
     [Required]
-    public Dictionary<string, string> MeasureValues { get; set; } = [];
+    public Dictionary<string, string>? MeasureValues { get; set; } = [];
 }

@@ -1,4 +1,4 @@
-﻿using Bss.Component.Core.Models;
+﻿using Bss.Component.Core.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,4 +19,3 @@ public class MeasureConfiguration : IEntityTypeConfiguration<Measure>
             .IsRequired();
     }
 }
-
