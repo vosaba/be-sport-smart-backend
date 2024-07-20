@@ -1,4 +1,4 @@
-﻿using Bss.Component.Core.Data.Models;
+﻿using Bss.UserValues.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

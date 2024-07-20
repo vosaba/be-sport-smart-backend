@@ -1,5 +1,5 @@
-﻿using Bss.Component.Identity.Data;
-using Bss.Component.Identity.Models;
+﻿using Bss.Identity.Data;
+using Bss.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +24,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(IdentityDbContext).Assembly,
-            x => x.Namespace!.EndsWith(nameof(Component.Identity)));
+            x => x.Namespace!.EndsWith(nameof(Identity)));
         base.OnModelCreating(modelBuilder);
     }
 }

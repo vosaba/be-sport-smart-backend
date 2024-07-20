@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bss.Component.Core\Bss.Component.Core.csproj" />
-    <ProjectReference Include="..\Bss.Component.Identity\Bss.Component.Identity.csproj" />
+    <ProjectReference Include="..\Bss.Core.Bl\Bss.Core.Bl.csproj" />
+    <ProjectReference Include="..\Bss.Identity\Bss.Identity.csproj" />
+    <ProjectReference Include="..\Bss.UserValues\Bss.UserValues.csproj" />
   </ItemGroup>
 
   <ItemGroup>

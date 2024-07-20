@@ -1,5 +1,5 @@
-﻿using Bss.Component.Core.Data;
-using Bss.Component.Identity.Data;
+﻿using Bss.Identity.Data;
+using Bss.Core.Bl.Data;
 using Bss.Dal.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

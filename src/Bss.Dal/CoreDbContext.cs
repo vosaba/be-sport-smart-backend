@@ -1,10 +1,12 @@
-﻿using Bss.Component.Core.Data;
-using Bss.Component.Core.Data.Models;
+﻿using Bss.Core.Bl.Data;
+using Bss.Core.Bl.Models;
+using Bss.UserValues.Data;
+using Bss.UserValues.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bss.Dal;
 
-public class CoreDbContext : DbContext, ICoreDbContext
+public class CoreDbContext : DbContext, ICoreDbContext, IUserValuesDbContext
 {
     public DbSet<Computation> Computations => Set<Computation>();
 
@@ -21,7 +23,7 @@ public class CoreDbContext : DbContext, ICoreDbContext
 
     IQueryable<Measure> ICoreDbContext.Measures => Measures.AsQueryable();
 
-    IQueryable<UserMeasureValue> ICoreDbContext.UserMeasureValues => UserMeasureValues.AsQueryable();
+    IQueryable<UserMeasureValue> IUserValuesDbContext.UserMeasureValues => UserMeasureValues.AsQueryable();
 
     public void Delete<T>(T entity)
         => Remove(entity!);
@@ -33,7 +35,7 @@ public class CoreDbContext : DbContext, ICoreDbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(CoreDbContext).Assembly,
-            x => x.Namespace!.EndsWith(nameof(Component.Core)));
+            x => x.Namespace!.EndsWith(nameof(Core)));
         base.OnModelCreating(modelBuilder);
     }
 }

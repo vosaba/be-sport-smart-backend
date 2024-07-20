@@ -1,4 +1,4 @@
-﻿using Bss.Component.Identity.Models;
+﻿using Bss.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
