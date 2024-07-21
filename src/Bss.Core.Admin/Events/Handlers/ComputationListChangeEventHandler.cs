@@ -3,11 +3,11 @@ using Bss.Infrastructure.Jobs.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Core.Admin.Events.ComputationListChange;
+namespace Bss.Core.Admin.Events.Handlers;
 
 internal class ComputationListChangeEventHandler(
     IJobRunner jobRunner,
-    ILogger<ComputationListChangeEventHandler> logger) 
+    ILogger<ComputationListChangeEventHandler> logger)
     : INotificationHandler<ComputationListChangeEvent>
 {
     public async Task Handle(ComputationListChangeEvent @event, CancellationToken cancellationToken)

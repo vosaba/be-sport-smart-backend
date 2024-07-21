@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bss.Core.Engine", "src\Bss.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bss.UserValues", "src\Bss.UserValues\Bss.UserValues.csproj", "{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bss.Core.Admin.SportScore", "src\Bss.Core.Admin.SportScore\Bss.Core.Admin.SportScore.csproj", "{73E5C46B-A343-42CC-9653-9A3925F08F33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73E5C46B-A343-42CC-9653-9A3925F08F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73E5C46B-A343-42CC-9653-9A3925F08F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73E5C46B-A343-42CC-9653-9A3925F08F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73E5C46B-A343-42CC-9653-9A3925F08F33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{1A338D8C-15A6-43B3-95D3-692B8639A5B1} = {ACC5EFC9-F186-45DE-AC4A-1A126DC4A4BA}
 		{C470EAFD-8EB3-4662-AD37-AF130E4A31CF} = {ACC5EFC9-F186-45DE-AC4A-1A126DC4A4BA}
 		{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6} = {ACC5EFC9-F186-45DE-AC4A-1A126DC4A4BA}
+		{73E5C46B-A343-42CC-9653-9A3925F08F33} = {ACC5EFC9-F186-45DE-AC4A-1A126DC4A4BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957B24AD-DFC6-4AE9-8A58-C8E044B45990}

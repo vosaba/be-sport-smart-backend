@@ -1,4 +1,4 @@
-﻿using Bss.Core.Admin.Events.ComputationListChange;
+﻿using Bss.Core.Admin.Events;
 using Bss.Core.Admin.Services.ComputationAnalyzers;
 using Bss.Core.Bl.Data;
 using Bss.Core.Bl.Models;

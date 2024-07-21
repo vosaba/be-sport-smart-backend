@@ -3,11 +3,11 @@ using Bss.Infrastructure.Jobs.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Bss.Core.Admin.Events.MeasureListChange;
+namespace Bss.Core.Admin.Events.Handlers;
 
 internal class MeasureListChangeEventHandler(
     IJobRunner jobRunner,
-    ILogger<MeasureListChangeEventHandler> logger) 
+    ILogger<MeasureListChangeEventHandler> logger)
     : INotificationHandler<MeasureListChangeEvent>
 {
     public async Task Handle(MeasureListChangeEvent @event, CancellationToken cancellationToken)

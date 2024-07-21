@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace Bss.Core.Admin.Events.MeasureListChange;
+namespace Bss.Core.Admin.Events;
 
 internal class MeasureListChangeEvent() : INotification;

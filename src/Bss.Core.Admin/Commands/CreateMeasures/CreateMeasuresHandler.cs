@@ -1,4 +1,4 @@
-﻿using Bss.Core.Admin.Events.MeasureListChange;
+﻿using Bss.Core.Admin.Events;
 using Bss.Core.Bl.Data;
 using Bss.Core.Bl.Models;
 using Bss.Infrastructure.Identity.Abstractions;
