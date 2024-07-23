@@ -63,7 +63,7 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
             InitializeEngineInternalContext();
         }
 
-        _computations ??= new List<Computation>();
+        _computations ??= [];
 
         foreach (var computation in computations)
         {
@@ -121,22 +121,6 @@ internal class JsComputationEngine(ILogger<JsComputationEngine> logger) : ICompu
         {
             throw new OperationException("Error evaluating formula", ex);
         }
-    }
-
-    public async Task EnsureExecutable(Computation computation, params MeasureValue[] measureValues)
-    {
-        var existingComputation = Context
-            .Where(x => x.Name == computation.Name)
-            .SingleOrDefault()
-            ?? throw new NotFoundException(computation.Name, nameof(Computation));
-
-        var missingMeasure = measureValues.FirstOrDefault(measureValue => !existingComputation.RequiredMeasures.Contains(measureValue.Name));
-        if (missingMeasure != null)
-        {
-            throw new OperationException($"Required measure value not provided: {missingMeasure.Name}");
-        }
-
-        return;
     }
 
     public void Dispose()

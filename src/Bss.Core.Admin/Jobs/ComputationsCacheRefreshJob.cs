@@ -23,6 +23,7 @@ public class ComputationsCacheRefreshJob(
 
         var computations = await dbContext
             .Computations
+            .AsNoTracking()
             .Where(x => x.Disabled == false)
             .ToListAsync(cancellationToken);
 

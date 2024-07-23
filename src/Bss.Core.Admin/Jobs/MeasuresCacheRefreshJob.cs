@@ -20,6 +20,7 @@ public class MeasuresCacheRefreshJob(
 
         var measures = await dbContext
             .Measures
+            .AsNoTracking()
             .Where(x => x.Disabled == false)
             .ToListAsync(cancellationToken);
 

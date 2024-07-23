@@ -16,7 +16,5 @@ public interface IComputationEngine : IDisposable
     public Task<TResult> Evaluate<TResult>(Computation computation, params MeasureValue[] measureValues)
         where TResult : struct;
 
-    Task EnsureExecutable(Computation computation, params MeasureValue[] measureValues);
-
     public void RefreshContext(IEnumerable<Computation> computations);
 }
