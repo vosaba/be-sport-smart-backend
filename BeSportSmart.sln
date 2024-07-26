@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bss.Core.Engine", "src\Bss.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bss.UserValues", "src\Bss.UserValues\Bss.UserValues.csproj", "{8BD64EF7-584E-4A60-BBFF-D1C98AA8D7A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bss.Core.Admin.SportScore", "src\Bss.Core.Admin.SportScore\Bss.Core.Admin.SportScore.csproj", "{73E5C46B-A343-42CC-9653-9A3925F08F33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bss.Core.Admin.SportManager", "src\Bss.Core.Admin.SportManager\Bss.Core.Admin.SportManager.csproj", "{73E5C46B-A343-42CC-9653-9A3925F08F33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

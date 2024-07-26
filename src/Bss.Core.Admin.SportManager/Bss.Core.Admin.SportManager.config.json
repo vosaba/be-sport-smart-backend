@@ -1,0 +1,5 @@
+{
+  "BssCoreAdminSportManager": {
+    "JsSportFormulaTemplate": "(context) => { const sport_bmi = 25; const sport_height = 100; const sport_height_score = 2; const somatotype_scores = { Female: { endomorph: , mesomorph: 0, ectomorph: 0 }, Male: { endomorph: 0, mesomorph: 0, ectomorph: 0 } }; return context.scores.bmi_sport_score(context, sport_bmi) + context.scores.height_sport_score(context, sport_height, sport_height_score) + context.scores.somatotype_score(context, somatotype_scores); }"
+  }
+}

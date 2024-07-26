@@ -1,11 +1,11 @@
-﻿using Bss.Core.Admin.SportScore.Services.SportFormulaManipulator;
+﻿using Bss.Core.Admin.SportManager.Services.SportFormulaManipulator;
 using Bss.Core.Bl.Enums;
 using Bss.Infrastructure.Commands;
 using Bss.Infrastructure.Shared.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bss.Core.Admin.SportScore;
+namespace Bss.Core.Admin.SportManager;
 
 public class Module
 {
@@ -19,7 +19,7 @@ public class Module
             .Register<DummySportFormulaManipulator>(ComputationEngine.Dummy)
             .Build();
 
-        services.AddCommands<Module>(nameof(Core), "admin/sportScore");
+        services.AddCommands<Module>(nameof(Core), "admin/sportManager");
     }
 
     public void Configure(IApplicationBuilder app)

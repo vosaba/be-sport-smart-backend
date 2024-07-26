@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Bss.Core.Admin\Bss.Core.Admin.csproj" />
-    <ProjectReference Include="..\..\src\Bss.Core.Admin.SportScore\Bss.Core.Admin.SportScore.csproj" />
+    <ProjectReference Include="..\..\src\Bss.Core.Admin.SportManager\Bss.Core.Admin.SportManager.csproj" />
     <ProjectReference Include="..\..\src\Bss.Core.Engine\Bss.Core.Engine.csproj" />
     <ProjectReference Include="..\..\src\Bss.Identity\Bss.Identity.csproj" />
     <ProjectReference Include="..\..\src\Bss.UserValues\Bss.UserValues.csproj" />

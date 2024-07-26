@@ -1,19 +1,19 @@
-﻿using Bss.Core.Admin.SportScore.Dto;
-using Bss.Core.Admin.SportScore.Services.SportFormulaManipulator;
+﻿using Bss.Core.Admin.SportManager.Dto;
+using Bss.Core.Admin.SportManager.Services.SportFormulaManipulator;
 using Bss.Core.Bl.Data;
 using Bss.Core.Bl.Enums;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bss.Core.Admin.SportScore.Commands.GetSportScoreData;
+namespace Bss.Core.Admin.SportManager.Commands.GetSports;
 
 [Authorize(Roles = "Admin")]
-public class GetSportScoreDataHandler(
+public class GetSportsHandler(
     ICoreDbContext coreDbContext,
-    IServiceFactory<ISportFormulaManipulator> formulaScoreManipulatorFactory)
+    IServiceFactory<ISportFormulaManipulator> sportFormulaManipulatorFactory)
 {
-    public async Task<SportScoreDto[]> Handle(GetSportScoreDataRequest request)
+    public async Task<SportDto[]> Handle(GetSportsRequest request)
     {
         var sportScoreDataQuery = coreDbContext.Computations
             .Where(x => x.Type == ComputationType.Sport && x.Engine == ComputationEngine.Js);
@@ -27,12 +27,12 @@ public class GetSportScoreDataHandler(
 
         return sportScoreData
             .OrderBy(x => x.Name)
-            .Select(x => new SportScoreDto
+            .Select(x => new SportDto
             {
-                SportName = x.Name,
-                SportScoreData = formulaScoreManipulatorFactory
+                Name = x.Name,
+                Variables = sportFormulaManipulatorFactory
                     .GetService(x.Engine)
-                    .GetSportScoreData(x)
+                    .GetFormulaVariables(x.Formula)
             }).ToArray();
     }
 }
