@@ -20,7 +20,7 @@ public class UpdateMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
         { 
             throw new NotFoundException<Measure>(request.Id);
         }
-        else if (measure.CreatedBy != userContext.UserId)
+        else if (!measure.IsEditableByUser(userContext.UserId, userContext.IsInRole))
         {
             throw new OperationException("Measure is owned by another user.", OperationErrorCodes.Forbidden);
         }

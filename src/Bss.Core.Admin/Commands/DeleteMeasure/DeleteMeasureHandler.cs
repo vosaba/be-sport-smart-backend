@@ -22,8 +22,7 @@ public class DeleteMeasureHandler(IUserContext userContext, ICoreDbContext dbCon
         {
             throw new NotFoundException<Measure>(request.Id);
         }
-
-        if (measure.CreatedBy != userContext.UserId)
+        else if (!measure.IsEditableByUser(userContext.UserId, userContext.IsInRole))
         {
             throw new OperationException("Measure is owned by another user.", OperationErrorCodes.Forbidden);
         }

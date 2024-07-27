@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bss.Core.Admin.SportManager.Commands.ResetSport;
+namespace Bss.Core.Admin.SportManager.Commands.SyncSport;
 
-public class CreateSportRequest
+public class SyncSportRequest
 {
     [Required]
-    public string Sport { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     public Dictionary<string, object> Variables { get; set; } = [];

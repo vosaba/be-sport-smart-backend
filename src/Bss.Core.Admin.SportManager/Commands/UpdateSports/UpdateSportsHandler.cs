@@ -29,10 +29,10 @@ public class UpdateSportsHandler(
                 && names.Contains(x.Name))
             .ToListAsync();
 
-        foreach (var sportScore in request.Sports)
+        foreach (var sport in request.Sports)
         {
-            var computation = computationsQuery.FirstOrDefault(x => x.Name == sportScore.Name) 
-                ?? throw new NotFoundException(sportScore.Name, nameof(SportDto));
+            var computation = computationsQuery.FirstOrDefault(x => x.Name == sport.Name) 
+                ?? throw new NotFoundException(sport.Name, nameof(SportDto));
 
             var computationAnalyzer = computationAnalyzerFactory
                 .GetService(computation.Engine);
@@ -40,12 +40,19 @@ public class UpdateSportsHandler(
                 .GetService(computation.Engine);
 
             var newFormula = sportFormulaManipulator
-                .ApplyVariablesToFormula(computation.Formula, sportScore.Variables);
+                .ApplyVariablesToFormula(computation.Formula, sport.Variables);
 
             await computation.SetFormula(
                 newFormula,
                 computationAnalyzer.GetComputationRequirements,
                 computationAnalyzer.EnsureValid);
+
+            computation.Update(
+                computation.Type,
+                computation.Engine,
+                computation.Name,
+                sport.Disabled ?? computation.Disabled,
+                computation.Availability);
         }
 
         await coreDbContext.SaveChangesAsync();

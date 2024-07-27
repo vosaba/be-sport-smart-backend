@@ -66,4 +66,7 @@ public class Measure(
     public bool IsMeasurableByUser(bool isSignedIn)
         => !Disabled
         && (Availability == MeasureAvailability.NoRestriction || isSignedIn && Availability == MeasureAvailability.User);
+
+    public bool IsEditableByUser(Guid userId, Func<string, bool> isInRule)
+        => isInRule("Admin") || (isInRule("Trainer") && CreatedBy == userId);
 }

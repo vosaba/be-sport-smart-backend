@@ -17,5 +17,11 @@
     <ProjectReference Include="..\Bss.Core.Admin\Bss.Core.Admin.csproj" />
     <ProjectReference Include="..\Bss.Infrastructure\Bss.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bss.Core.Admin.SportManager.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>

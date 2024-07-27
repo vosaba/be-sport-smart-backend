@@ -29,7 +29,7 @@ public class UpdateComputationsHandler(
             {
                 throw new NotFoundException<Computation>(computationUpdate.Id);
             }
-            else if (computation.CreatedBy != userContext.UserId)
+            else if (!computation.IsEditableByUser(userContext.UserId, userContext.IsInRole))
             {
                 throw new OperationException("Computation is owned by another user.", OperationErrorCodes.Forbidden);
             }

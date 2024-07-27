@@ -79,6 +79,9 @@ public class Computation
         => !Disabled
         && (Availability == ComputationAvailability.NoRestriction || isSignedIn && Availability == ComputationAvailability.User);
 
+    public bool IsEditableByUser(Guid userId, Func<string, bool> isInRule)
+        => isInRule("Admin") || (isInRule("Trainer") && CreatedBy == userId);
+
     private static ComputationAvailability GetAvailability(ComputationType type, ComputationAvailability? availability) => type switch
     {
         ComputationType.Sport => availability ?? ComputationAvailability.NoRestriction,

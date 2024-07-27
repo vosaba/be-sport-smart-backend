@@ -26,7 +26,7 @@ public class UpdateComputationHandler(
         {
             throw new NotFoundException<Computation>(request.Id);
         }
-        else if (computation.CreatedBy != userContext.UserId)
+        else if (!computation.IsEditableByUser(userContext.UserId, userContext.IsInRole))
         {
             throw new OperationException("Computation is owned by another user.", OperationErrorCodes.Forbidden);
         }

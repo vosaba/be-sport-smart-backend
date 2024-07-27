@@ -22,8 +22,7 @@ public class DeleteComputationHandler(IUserContext userContext, ICoreDbContext d
         {
             throw new NotFoundException<Measure>(request.Id);
         }
-
-        if (computation.CreatedBy != userContext.UserId)
+        else if (!computation.IsEditableByUser(userContext.UserId, userContext.IsInRole))
         {
             throw new OperationException("Consumption is owned by another user.", OperationErrorCodes.Forbidden);
         }

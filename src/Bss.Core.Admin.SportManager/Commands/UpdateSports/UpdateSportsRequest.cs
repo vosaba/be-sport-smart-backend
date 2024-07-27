@@ -15,5 +15,7 @@ public class UpdateSportsRequest
 
         [Required]
         public Dictionary<string, object> Variables { get; set; } = [];
+
+        public bool? Disabled { get; set; }
     }
 }

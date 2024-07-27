@@ -6,7 +6,7 @@ namespace Bss.Core.Admin.SportManager.Commands.CreateSport;
 public class CreateSportRequest
 {
     [Required]
-    public string Sport { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     public ComputationEngine ComputationEngine { get; set; } = ComputationEngine.Js;

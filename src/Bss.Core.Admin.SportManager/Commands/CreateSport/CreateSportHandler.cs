@@ -26,12 +26,12 @@ public class CreateSportHandler(
     {
         var computation = await coreDbContext
             .Computations
-            .Where(x => x.Type == ComputationType.Sport && request.Sport == x.Name)
+            .Where(x => x.Type == ComputationType.Sport && request.Name == x.Name)
             .FirstOrDefaultAsync();
 
         if (computation != null)
         { 
-            throw new OperationException($"Sport {request.Sport} already exists.");
+            throw new OperationException($"Sport {request.Name} already exists.");
         }
 
         var computationAnalyzer = computationAnalyzerFactory
@@ -40,7 +40,7 @@ public class CreateSportHandler(
             .GetService(request.ComputationEngine);
 
         var newComputation = new Computation(
-            request.Sport,
+            request.Name,
             ComputationType.Sport,
             request.ComputationEngine,
             userContext.UserId,
@@ -53,6 +53,8 @@ public class CreateSportHandler(
             newFormula,
             computationAnalyzer.GetComputationRequirements,
             computationAnalyzer.EnsureValid);
+        
+        coreDbContext.Push(newComputation);
 
         await coreDbContext.SaveChangesAsync();
         await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));

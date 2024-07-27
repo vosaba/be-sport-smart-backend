@@ -10,22 +10,22 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bss.Core.Admin.SportManager.Commands.ResetSport;
+namespace Bss.Core.Admin.SportManager.Commands.SyncSport;
 
 [Authorize(Roles = "Admin")]
-public class ResetSportHandler(
+public class SyncSportHandler(
     IMediator mediator,
     ICoreDbContext coreDbContext,
     IServiceFactory<IComputationAnalyzer> computationAnalyzerFactory,
     IServiceFactory<ISportFormulaManipulator> sportFormulaManipulatorFactory)
 {
-    public async Task Handle(CreateSportRequest request)
+    public async Task<SportDto> Handle(SyncSportRequest request)
     {
         var computation = await coreDbContext
             .Computations
-            .Where(x => x.Type == ComputationType.Sport && request.Sport == x.Name)
+            .Where(x => x.Type == ComputationType.Sport && request.Name == x.Name)
             .FirstOrDefaultAsync()
-                ?? throw new NotFoundException(request.Sport, nameof(SportDto));
+                ?? throw new NotFoundException(request.Name, nameof(SportDto));
 
         var computationAnalyzer = computationAnalyzerFactory
             .GetService(computation.Engine);
@@ -42,5 +42,11 @@ public class ResetSportHandler(
 
         await coreDbContext.SaveChangesAsync();
         await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));
+
+        return new SportDto
+        {
+            Name = computation.Name,
+            Variables = sportFormulaManipulator.GetFormulaVariables(computation.Formula),
+        };
     }
 }

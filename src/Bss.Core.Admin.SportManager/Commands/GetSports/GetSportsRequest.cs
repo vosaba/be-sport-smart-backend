@@ -2,5 +2,5 @@
 
 public class GetSportsRequest
 {
-    public string? SportName { get; set; }
+    public string? Name { get; set; }
 }
