@@ -33,6 +33,7 @@ public class GetSportsHandler(
                 Variables = sportFormulaManipulatorFactory
                     .GetService(x.Engine)
                     .GetFormulaVariables(x.Formula),
+                Formula = x.Formula,
                 Disabled = x.Disabled,
             }).ToArray();
     }

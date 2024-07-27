@@ -19,6 +19,7 @@ public class GetSportTemplateHandler(
         {
             Name = string.Empty,
             Variables = sportFormulaManipulator.GetFormulaVariables(sportFormula),
+            Formula = sportFormula,
         };
     }
 }

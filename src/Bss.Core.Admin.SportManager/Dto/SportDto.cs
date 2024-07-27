@@ -6,5 +6,7 @@ public class SportDto
 
     public Dictionary<string, object> Variables { get; set; } = [];
 
+    public string Formula { get; set; } = string.Empty;
+
     public bool Disabled { get; set; }
 }

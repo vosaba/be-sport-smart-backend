@@ -22,7 +22,7 @@ public class CreateSportHandler(
     IServiceFactory<IComputationAnalyzer> computationAnalyzerFactory,
     IServiceFactory<ISportFormulaManipulator> sportFormulaManipulatorFactory)
 {
-    public async Task Handle(CreateSportRequest request)
+    public async Task<SportDto> Handle(CreateSportRequest request)
     {
         var computation = await coreDbContext
             .Computations
@@ -58,5 +58,13 @@ public class CreateSportHandler(
 
         await coreDbContext.SaveChangesAsync();
         await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));
+
+        return new SportDto
+        {
+            Name = newComputation.Name,
+            Variables = sportFormulaManipulator.GetFormulaVariables(newComputation.Formula),
+            Disabled = newComputation.Disabled,
+            Formula = newComputation.Formula,
+        };
     }
 }
