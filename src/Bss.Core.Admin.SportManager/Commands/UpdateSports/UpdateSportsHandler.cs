@@ -19,7 +19,7 @@ public class UpdateSportsHandler(
     IServiceFactory<IComputationAnalyzer> computationAnalyzerFactory,
     IServiceFactory<ISportFormulaManipulator> sportFormulaManipulatorFactory)
 {
-    public async Task Handle(UpdateSportsRequest request)
+    public async Task<SportDto[]> Handle(UpdateSportsRequest request)
     {
         var names = request.Sports.Select(x => x.Name).ToArray();
 
@@ -28,6 +28,8 @@ public class UpdateSportsHandler(
                 x => x.Type == ComputationType.Sport
                 && names.Contains(x.Name))
             .ToListAsync();
+        
+        var updatedSports = new List<SportDto>();
 
         foreach (var sport in request.Sports)
         {
@@ -53,9 +55,19 @@ public class UpdateSportsHandler(
                 computation.Name,
                 sport.Disabled ?? computation.Disabled,
                 computation.Availability);
+
+            updatedSports.Add(new SportDto
+            {
+                Name = computation.Name,
+                Variables = sportFormulaManipulator.GetFormulaVariables(computation.Formula),
+                Formula = computation.Formula,
+                Disabled = computation.Disabled,
+            });
         }
 
         await coreDbContext.SaveChangesAsync();
         await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));
+
+        return [.. updatedSports];
     }
 }
