@@ -48,6 +48,7 @@ public class SyncSportHandler(
             Name = computation.Name,
             Variables = sportFormulaManipulator.GetFormulaVariables(computation.Formula),
             Formula = computation.Formula,
+            Disabled = computation.Disabled,
         };
     }
 }
