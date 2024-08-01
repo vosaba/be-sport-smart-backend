@@ -57,7 +57,7 @@ public class CreateSportHandler(
         coreDbContext.Push(newComputation);
 
         await coreDbContext.SaveChangesAsync();
-        await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));
+        await mediator.Publish(new ComputationListChangeEvent(newComputation.Engine));
 
         return new SportDto
         {

@@ -1,11 +1,18 @@
 ﻿using Bss.Core.Admin.SportManager.Configurations;
+using Bss.Core.Bl.Data;
+using Bss.Core.Bl.Enums;
+using Bss.Core.Bl.Models;
+using Bss.Infrastructure.Errors.Abstractions;
 using Esprima;
 using Esprima.Ast;
+using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Bss.Core.Admin.SportManager.Services.SportFormulaManipulator;
 
-public class JsSportFormulaManipulator(IOptions<BssCoreAdminSportManagerConfiguration> options) 
+public class JsSportFormulaManipulator(
+    ICoreDbContext coreDbContext,
+    IOptions<BssCoreAdminSportManagerConfiguration> configuration) 
     : ISportFormulaManipulator
 {
     public Dictionary<string, object> GetFormulaVariables(string formula)
@@ -35,11 +42,11 @@ public class JsSportFormulaManipulator(IOptions<BssCoreAdminSportManagerConfigur
             var variableValue = variables[variableName];
             var variableValueString = variableValue switch
             {
-                string stringValue => stringValue,
+                string stringValue => $"\"{stringValue}\"",
                 double doubleValue => doubleValue.ToString(),
                 int intValue => intValue.ToString(),
                 long longValue => longValue.ToString(),
-                bool boolValue => boolValue.ToString(),
+                bool boolValue => boolValue.ToString().ToLower(),
                 _ => throw new InvalidOperationException($"Unsupported type for variable {variableName}"),
             };
 
@@ -52,14 +59,16 @@ public class JsSportFormulaManipulator(IOptions<BssCoreAdminSportManagerConfigur
 
     public string CreateFormulaUsingData(Dictionary<string, object> variables)
     {
-        var formula = options.Value.JsSportFormulaTemplate;
-
-        if (string.IsNullOrWhiteSpace(formula))
+        if (!configuration.Value.SportFormulaTemplateNames.TryGetValue(ComputationEngine.Js, out string? sportFormulaTemplateName))
         {
-            throw new InvalidOperationException("JsSportFormulaTemplate is not set in configuration");
+            throw new OperationException("Js SportFormulaTemplateName is not set in configuration");
         }
 
-        return ApplyVariablesToFormula(formula, variables);
+        var sportFormulaTemplate = coreDbContext.Computations
+            .FirstOrDefault(x => x.Name == sportFormulaTemplateName && x.Engine == ComputationEngine.Js)
+            ?? throw new NotFoundException(sportFormulaTemplateName, nameof(Computation));
+
+        return ApplyVariablesToFormula(sportFormulaTemplate.Formula, variables);
     }
 
     private static void WalkOverVariableLiterals(string formula, Action<string, Literal> callback)

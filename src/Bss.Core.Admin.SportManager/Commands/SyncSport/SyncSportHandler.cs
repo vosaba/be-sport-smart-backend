@@ -41,7 +41,7 @@ public class SyncSportHandler(
             computationAnalyzer.EnsureValid);
 
         await coreDbContext.SaveChangesAsync();
-        await mediator.Publish(new ComputationListChangeEvent(ComputationEngine.Js));
+        await mediator.Publish(new ComputationListChangeEvent(computation.Engine));
 
         return new SportDto
         {
