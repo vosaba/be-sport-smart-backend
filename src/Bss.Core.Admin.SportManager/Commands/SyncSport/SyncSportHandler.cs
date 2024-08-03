@@ -46,6 +46,7 @@ public class SyncSportHandler(
         return new SportDto
         {
             Name = computation.Name,
+            Type = computation.Type,
             Variables = sportFormulaManipulator.GetFormulaVariables(computation.Formula),
             Formula = computation.Formula,
             Disabled = computation.Disabled,

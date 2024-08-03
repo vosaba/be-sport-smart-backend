@@ -24,9 +24,7 @@ public class UpdateSportsHandler(
         var names = request.Sports.Select(x => x.Name).ToArray();
 
         var computationsQuery = await coreDbContext.Computations
-            .Where(
-                x => x.Type == ComputationType.Sport
-                && names.Contains(x.Name))
+            .Where(x => names.Contains(x.Name))
             .ToListAsync();
         
         var updatedSports = new List<SportDto>();
@@ -59,6 +57,7 @@ public class UpdateSportsHandler(
             updatedSports.Add(new SportDto
             {
                 Name = computation.Name,
+                Type = computation.Type,
                 Variables = sportFormulaManipulator.GetFormulaVariables(computation.Formula),
                 Formula = computation.Formula,
                 Disabled = computation.Disabled,

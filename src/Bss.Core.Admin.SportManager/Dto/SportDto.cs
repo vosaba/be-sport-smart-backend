@@ -1,7 +1,11 @@
-﻿namespace Bss.Core.Admin.SportManager.Dto;
+﻿using Bss.Core.Bl.Enums;
+
+namespace Bss.Core.Admin.SportManager.Dto;
 
 public class SportDto
 {
+    public ComputationType Type { get; set; } = ComputationType.Sport;
+
     public string Name { get; set; } = string.Empty;
 
     public Dictionary<string, object> Variables { get; set; } = [];

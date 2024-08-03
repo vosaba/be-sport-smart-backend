@@ -85,15 +85,7 @@ public class JsSportFormulaManipulator(
                     if (declaration.Id is Identifier identifier)
                     {
                         var variableName = prefix + identifier.Name;
-
-                        if (declaration.Init is Literal literal)
-                        {
-                            callback(variableName, literal);
-                        }
-                        else if (declaration.Init is ObjectExpression objectExpression)
-                        {
-                            ExtractObjectProperties(objectExpression, variableName);
-                        }
+                        ProcessNode(declaration.Init, variableName);
                     }
                 }
             }
@@ -104,23 +96,41 @@ public class JsSportFormulaManipulator(
             }
         }
 
+        void ProcessNode(Node node, string prefix)
+        {
+            if (node is Literal literal)
+            {
+                callback(prefix, literal);
+            }
+            else if (node is ObjectExpression objectExpression)
+            {
+                ExtractObjectProperties(objectExpression, prefix);
+            }
+            else if (node is ArrayExpression arrayExpression)
+            {
+                ExtractArrayElements(arrayExpression, prefix);
+            }
+        }
+
         void ExtractObjectProperties(ObjectExpression obj, string prefix)
         {
             foreach (var property in obj.Properties)
             {
                 if (property is Property prop)
                 {
-                    var propertyName = prefix + "." + (prop.Key as Identifier)?.Name;
-
-                    if (prop.Value is Literal literal)
-                    {
-                        callback(propertyName, literal);
-                    }
-                    else if (prop.Value is ObjectExpression nestedObject)
-                    {
-                        ExtractObjectProperties(nestedObject, propertyName);
-                    }
+                    var propertyName = prefix + "." + ((prop.Key as Identifier)?.Name ?? prop.Key.ToString());
+                    ProcessNode(prop.Value, propertyName);
                 }
+            }
+        }
+
+        void ExtractArrayElements(ArrayExpression array, string prefix)
+        {
+            for (int i = 0; i < array.Elements.Count; i++)
+            {
+                var element = array.Elements[i];
+                var elementName = $"{prefix}[{i}]";
+                ProcessNode(element, elementName);
             }
         }
 

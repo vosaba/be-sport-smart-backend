@@ -16,7 +16,7 @@ public class GetSportsHandler(
     public async Task<SportDto[]> Handle(GetSportsRequest request)
     {
         var sportScoreDataQuery = coreDbContext.Computations
-            .Where(x => x.Type == ComputationType.Sport && x.Engine == ComputationEngine.Js);
+            .Where(x => x.Type == request.Type && x.Engine == ComputationEngine.Js);
 
         if (!string.IsNullOrEmpty(request.Name))
         {
@@ -30,6 +30,7 @@ public class GetSportsHandler(
             .Select(x => new SportDto
             {
                 Name = x.Name,
+                Type = x.Type,
                 Variables = sportFormulaManipulatorFactory
                     .GetService(x.Engine)
                     .GetFormulaVariables(x.Formula),

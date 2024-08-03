@@ -62,6 +62,7 @@ public class CreateSportHandler(
         return new SportDto
         {
             Name = newComputation.Name,
+            Type = newComputation.Type,
             Variables = sportFormulaManipulator.GetFormulaVariables(newComputation.Formula),
             Disabled = newComputation.Disabled,
             Formula = newComputation.Formula,

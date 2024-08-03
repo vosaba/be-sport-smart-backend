@@ -1,5 +1,6 @@
 ﻿using Bss.Core.Admin.SportManager.Dto;
 using Bss.Core.Admin.SportManager.Services.SportFormulaManipulator;
+using Bss.Core.Bl.Enums;
 using Bss.Infrastructure.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
@@ -18,6 +19,7 @@ public class GetSportTemplateHandler(
         return new SportDto
         {
             Name = string.Empty,
+            Type = ComputationType.Sport,
             Variables = sportFormulaManipulator.GetFormulaVariables(sportFormula),
             Formula = sportFormula,
         };
