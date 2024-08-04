@@ -6,6 +6,7 @@ using Bss.Infrastructure.Errors.Abstractions;
 using Esprima;
 using Esprima.Ast;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Bss.Core.Admin.SportManager.Services.SportFormulaManipulator;
@@ -65,6 +66,7 @@ public class JsSportFormulaManipulator(
         }
 
         var sportFormulaTemplate = coreDbContext.Computations
+            .AsNoTracking()
             .FirstOrDefault(x => x.Name == sportFormulaTemplateName && x.Engine == ComputationEngine.Js)
             ?? throw new NotFoundException(sportFormulaTemplateName, nameof(Computation));
 

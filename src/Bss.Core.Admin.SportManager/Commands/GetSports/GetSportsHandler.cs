@@ -23,7 +23,9 @@ public class GetSportsHandler(
             sportScoreDataQuery = sportScoreDataQuery.Where(x => x.Name == request.Name);
         }
 
-        var sportScoreData = await sportScoreDataQuery.ToListAsync();
+        var sportScoreData = await sportScoreDataQuery
+            .AsNoTracking()
+            .ToListAsync();
 
         return sportScoreData
             .OrderBy(x => x.Name)
