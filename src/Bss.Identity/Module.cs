@@ -30,6 +30,12 @@ public class Module(IConfiguration configuration)
             option.DefaultChallengeScheme =
             option.DefaultScheme = AuthenticationSchemes.BearerJwt;
         })
+        .AddGitHub(githubOptions =>
+        {
+            githubOptions.ClientId = config.Github.ClientId;
+            githubOptions.ClientSecret = config.Github.ClientSecret;
+            githubOptions.CallbackPath = new PathString("/api/v1/identity/signInGithub");
+        })
         .AddJwtBearer(options =>
         {
             options.SaveToken = true;

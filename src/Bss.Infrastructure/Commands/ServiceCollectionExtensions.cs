@@ -138,7 +138,7 @@ public static partial class ServiceCollectionExtensions
 
     private static bool ValidHandler(MethodInfo? method) =>
         method != null &&
-        method.GetParameters().Length > 0 &&
+        //method.GetParameters().Length > 0 &&
         method is { IsPrivate: false, IsStatic: false } &&
         method.ReturnType != typeof(void);
 

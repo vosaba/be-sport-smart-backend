@@ -22,7 +22,8 @@ namespace Bss.Infrastructure.Commands;
 
 internal static class EndpointRouteBuilderExtensions
 {
-    private static readonly string[] HttpMethods = ["POST"];
+    private static readonly string[] HttpMethodsPost = ["POST"];
+    private static readonly string[] HttpMethodsGet = ["GET"];
 
     /// <summary>
     /// Adds endpoints for command actions to the <see cref="IEndpointRouteBuilder"/> without specifying any routes.
@@ -43,16 +44,27 @@ internal static class EndpointRouteBuilderExtensions
         var descriptors = services.GetService<IEnumerable<CommandDescriptor>>() ?? [];
         foreach (var descriptor in descriptors)
         {
+            var httpMethods = HttpMethodsPost;
+            // check if descriptor nethod has [HttpGet]
+            var httpMethodAttribute = descriptor.MethodInfo.GetCustomAttribute<HttpMethodAttribute>();
+            if (httpMethodAttribute != null)
+            {
+                if (httpMethodAttribute is HttpGetAttribute httpGetAttribute)
+                {
+                    httpMethods = HttpMethodsGet;
+                }
+            }
+
             var actionConstraints = new List<IActionConstraintMetadata>
-                { new HttpMethodActionConstraint(HttpMethods) };
+                { new HttpMethodActionConstraint(httpMethods) };
             var commandTypeInfo = descriptor.CommandType.GetTypeInfo();
             var defaultEndpointMetadata = new object[]
             {
                 new ControllerAttribute(),
                 new CommandHandlerAttribute(),
                 new RouteAttribute(descriptor.Route),
-                new HttpPostAttribute(),
-                new HttpMethodMetadata(HttpMethods),
+                //new HttpPostAttribute(),
+                new HttpMethodMetadata(httpMethods),
             };
             var endpointMetadata = defaultEndpointMetadata
                 .Concat(commandTypeInfo.GetCustomAttributes())
@@ -113,7 +125,7 @@ internal static class EndpointRouteBuilderExtensions
             builder.WithDisplayName(
                 $"{descriptor.CommandType.FullName}.{descriptor.MethodInfo.Name} " +
                 $"({descriptor.CommandType.Assembly.GetName().Name}) - " +
-                $"{string.Join(", ", HttpMethods)} {descriptor.Route}");
+                $"{string.Join(", ", httpMethods)} {descriptor.Route}");
             finalEndpointMetadata.ForEach(x => builder.WithMetadata(x));
             builder.WithMetadata(controllerActionDescriptor);
             actionConstraints.ForEach(x => builder.WithMetadata(x));

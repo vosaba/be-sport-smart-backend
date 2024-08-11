@@ -1,10 +1,15 @@
 {
   "BssIdentity": {
+    "RedirectUrl": "https://besportsmart.com/",
     "Jwt": {
       "Issuer": "http://localhost:5246",
       "Audience": "http://localhost:5246",
       "SigningKey": "sdgfijjh3466iu345g87g08c24g7204gr803g30587ghh35807fg39074fvg80493745gf082b507807g807fgf",
       "ExpireHours": 1
+    },
+    "Github": {
+      "ClientId": "Ov23liTKRqYa27M1zBwD",
+      "ClientSecret": "f2549cd4aaf0e04d2f1bbc5743b4c7971b5282be"
     }
   },
   "BssIdentityInitializer": {
