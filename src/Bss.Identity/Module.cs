@@ -1,5 +1,6 @@
 ﻿using Bss.Identity.Configuration;
 using Bss.Identity.Data;
+using Bss.Identity.Enums;
 using Bss.Identity.Extensions;
 using Bss.Identity.Jobs;
 using Bss.Identity.Models;
@@ -7,7 +8,7 @@ using Bss.Identity.Services;
 using Bss.Infrastructure.Commands;
 using Bss.Infrastructure.Configuration;
 using Bss.Infrastructure.Identity.Abstractions;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,17 +25,37 @@ public class Module(IConfiguration configuration)
 
         services.AddHttpContextAccessor();
 
-        var t = services.AddAuthentication(option =>
+        services.AddAuthentication(option =>
         {
             option.DefaultAuthenticateScheme =
             option.DefaultChallengeScheme =
             option.DefaultScheme = AuthenticationSchemes.BearerJwt;
         })
-        .AddGitHub(githubOptions =>
+        .AddGitHub(SupportedOAuthProviders.Github.ToString(), githubOptions =>
         {
             githubOptions.ClientId = config.Github.ClientId;
             githubOptions.ClientSecret = config.Github.ClientSecret;
-            githubOptions.CallbackPath = new PathString("/api/v1/identity/signInGithub");
+            githubOptions.CallbackPath = new PathString(config.Github.CallbackPath);
+
+            githubOptions.Scope.Add("user:email");
+
+            githubOptions.Events = new OAuthEvents
+            {
+                OnCreatingTicket = OAuthTicketHandlers.OnCreatingOAuthTicket
+            };
+        })
+        .AddGoogle(SupportedOAuthProviders.Google.ToString(), googleOptions =>
+        {
+            googleOptions.ClientId = config.Google.ClientId;
+            googleOptions.ClientSecret = config.Google.ClientSecret;
+            googleOptions.CallbackPath = new PathString(config.Google.CallbackPath);
+
+            googleOptions.Scope.Add("email");
+
+            googleOptions.Events = new OAuthEvents
+            {
+                OnCreatingTicket = OAuthTicketHandlers.OnCreatingOAuthTicket
+            };
         })
         .AddJwtBearer(options =>
         {
@@ -67,9 +88,5 @@ public class Module(IConfiguration configuration)
         services.AddScoped<IdentityInitializerJob>();
 
         services.AddCommands<Module>(nameof(Identity));
-    }
-
-    public void Configure(IApplicationBuilder app)
-    {
     }
 }

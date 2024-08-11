@@ -187,6 +187,15 @@ internal static class EndpointRouteBuilderExtensions
             };
         }
 
+        if (parameter.GetCustomAttribute<FromQueryAttribute>() != null)
+        {
+            return new BindingInfo
+            {
+                BindingSource = BindingSource.Query,
+                RequestPredicate = _ => true,
+            };
+        }
+
         return index == 0
             ? new BindingInfo
             {

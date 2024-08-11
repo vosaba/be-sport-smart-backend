@@ -5,9 +5,10 @@ namespace Bss.Identity.Configuration;
 [Configuration]
 public class BssIdentityConfiguration
 {
-    public string RedirectUrl { get; set; } = string.Empty;
+    public string AfterLoginRedirectUrl { get; set; } = string.Empty;
     public JwtConfiguration Jwt { get; set; } = new();
     public OAuthConfiguration Github { get; set; } = new();
+    public OAuthConfiguration Google { get; set; } = new();
 
     public class JwtConfiguration
     {
@@ -21,5 +22,6 @@ public class BssIdentityConfiguration
     {
         public string ClientId { get; set; } = string.Empty;
         public string ClientSecret { get; set; } = string.Empty;
+        public string CallbackPath { get; set; } = string.Empty;
     }
 }

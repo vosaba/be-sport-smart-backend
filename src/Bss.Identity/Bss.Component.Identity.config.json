@@ -1,6 +1,6 @@
 {
   "BssIdentity": {
-    "RedirectUrl": "https://besportsmart.com/",
+    "AfterLoginRedirectUrl": "http://localhost:5173/",
     "Jwt": {
       "Issuer": "http://localhost:5246",
       "Audience": "http://localhost:5246",
@@ -8,8 +8,14 @@
       "ExpireHours": 1
     },
     "Github": {
-      "ClientId": "Ov23liTKRqYa27M1zBwD",
-      "ClientSecret": "f2549cd4aaf0e04d2f1bbc5743b4c7971b5282be"
+      "ClientId": "Ov23lipsq2xFpjqpsAKd",
+      "ClientSecret": "bead804fe16536454b9fcafb5565b19deaeb27a7",
+      "CallbackPath": "/signin-github"
+    },
+    "Google": {
+      "ClientId": "566699870441-iter2svj40ta0g819em1ovi76h4nuu0j.apps.googleusercontent.com",
+      "ClientSecret": "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",
+      "CallbackPath": "/signin-google"
     }
   },
   "BssIdentityInitializer": {

@@ -1,3 +1,4 @@
+using Bss.Identity.Constants;
 using Bss.Identity.Models;
 using Bss.Infrastructure.Errors.Abstractions;
 using Microsoft.AspNetCore.Identity;
@@ -7,8 +8,6 @@ namespace Bss.Identity.Commands.SignUp;
 
 public class SignUpHandler(UserManager<ApplicationUser> userManager)
 {
-    private const string SignUpRole = "User";
-
     [ProducesResponseType(typeof(OperationErrorResult), 400)]
     public async Task Handle(SignUpRequest request)
     {
@@ -29,7 +28,7 @@ public class SignUpHandler(UserManager<ApplicationUser> userManager)
             throw new OperationException(result.Errors.Select(x => x.Description), OperationErrorCodes.InvalidRequest);
         }
         
-        result = await userManager.AddToRoleAsync(user, SignUpRole);
+        result = await userManager.AddToRoleAsync(user, Roles.User);
         if (!result.Succeeded)
         {
             throw new OperationException(result.Errors.Select(x => x.Description));
