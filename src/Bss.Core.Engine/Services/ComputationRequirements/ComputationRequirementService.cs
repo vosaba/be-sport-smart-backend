@@ -1,7 +1,9 @@
 ﻿using Bss.Core.Bl.Models;
+using Bss.Core.Engine.Configuration;
 using Bss.Core.Engine.Services.MeasureValues;
 using Bss.Infrastructure.Errors.Abstractions;
 using Bss.Infrastructure.Shared.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace Bss.Core.Engine.Services.ComputationRequirements;
 
@@ -18,7 +20,8 @@ public interface IComputationRequirementService
 
 public class ComputationRequirementService(
     ILocalCacheCollection<Computation> computationCacheCollection,
-    ILocalCacheCollection<ComputationRequirement> computationRequirementCacheCollection)
+    ILocalCacheCollection<ComputationRequirement> computationRequirementCacheCollection,
+    IOptions<CoreEngineConfiguration> config)
     : IComputationRequirementService
 {
     public bool IsRequiredMeasureProvided(Computation computation, IEnumerable<MeasureValue> measureValues)
@@ -27,7 +30,15 @@ public class ComputationRequirementService(
             .Where(x => x.ComputationName == computation.Name)
             .Single();
 
-        return computationRequirement.InheritMeasureRequirements.All(x => measureValues.Any(y => y.Name == x));
+        var measureRequirementsToCheck = config.Value.MeasureRequirementsCheckMode switch
+        {
+            MeasureRequirementsCheckMode.Direct => computationRequirement.DirectMeasureRequirements,
+            MeasureRequirementsCheckMode.Inherited => computationRequirement.InheritMeasureRequirements,
+            MeasureRequirementsCheckMode.None => [],
+            _ => throw new NotImplementedException()
+        };
+
+        return measureRequirementsToCheck.All(x => measureValues.Any(y => y.Name == x));
     }
 
     public void EnsureRequiredMeasureProvided(Computation computation, IEnumerable<MeasureValue> measureValues)
@@ -36,7 +47,15 @@ public class ComputationRequirementService(
             .Where(x => x.ComputationName == computation.Name)
             .Single();
 
-        foreach (var measureRequirement in computationRequirement.InheritMeasureRequirements)
+        var measureRequirementsToCheck = config.Value.MeasureRequirementsCheckMode switch
+        {
+            MeasureRequirementsCheckMode.Direct => computationRequirement.DirectMeasureRequirements,
+            MeasureRequirementsCheckMode.Inherited => computationRequirement.InheritMeasureRequirements,
+            MeasureRequirementsCheckMode.None => [],
+            _ => throw new NotImplementedException()
+        };
+
+        foreach (var measureRequirement in measureRequirementsToCheck)
         {
             if (!measureValues.Any(x => x.Name == measureRequirement))
             {
@@ -59,6 +78,7 @@ public class ComputationRequirementService(
             computationRequirements.Add(new ComputationRequirement
             {
                 ComputationName = computation.Name,
+                DirectMeasureRequirements = computation.RequiredMeasures.ToList(),
                 InheritMeasureRequirements = requiredMeasures.ToList()
             });
         }
