@@ -27,7 +27,7 @@ internal class NotificationService(ISendGridClient sendGridClient, IOptions<Send
         await SendSendGridEmailAsync(_configuration.AdminEmail, templateId, templateData);
     }
 
-    private Task SendSendGridEmailAsync (string toEmail, string templateId, object templateData)
+    private async Task SendSendGridEmailAsync (string toEmail, string templateId, object templateData)
     {
         try
         {
@@ -35,12 +35,13 @@ internal class NotificationService(ISendGridClient sendGridClient, IOptions<Send
             var to = new EmailAddress(toEmail);
             var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, templateData);
 
-            return _sendGridClient.SendEmailAsync(msg);
+            await _sendGridClient.SendEmailAsync(msg);
+
+            _logger.LogInformation("Email sent to {Email}", toEmail);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error sending email to {Email}", toEmail);
-            throw;
         }
     }
 }
