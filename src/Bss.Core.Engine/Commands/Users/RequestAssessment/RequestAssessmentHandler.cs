@@ -6,7 +6,10 @@ using Microsoft.Extensions.Logging;
 namespace Bss.Core.Engine.Commands.Users.RequestAssessment;
 
 [Authorize(Roles = "User")]
-public class RequestAssessmentHandler(ILogger<RequestAssessmentHandler> logger, INotificationService notificationService, IUserContext userContex)
+public class RequestAssessmentHandler(
+    ILogger<RequestAssessmentHandler> logger,
+    INotificationService notificationService,
+    IUserContext userContex)
 {
     public async Task Handle(RequestAssessmentRequest request)
     {
@@ -15,6 +18,13 @@ public class RequestAssessmentHandler(ILogger<RequestAssessmentHandler> logger, 
             logger.LogWarning("RequestAssessmentHandler: MeasureValues is empty.");
         }
 
-        await notificationService.SendNewRequestAdminNotificationAsync(userContex.Email!, request.Phone, request.MeasureValues);
+        logger.LogTrace("User with email {Email} requested assessment for zip code {ZipCode}.", userContex.Email, request.Zip);
+
+        await notificationService.SendNewRequestAdminNotificationAsync(
+            userContex.Email!,
+            request.Zip,
+            request.Name,
+            request.Phone,
+            request.MeasureValues);
     }
 }

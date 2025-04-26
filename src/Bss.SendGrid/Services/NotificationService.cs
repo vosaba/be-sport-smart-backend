@@ -14,13 +14,15 @@ internal class NotificationService(ISendGridClient sendGridClient, IOptions<Send
     private readonly SendGridConfiguration _configuration = options.Value;
     private readonly ILogger _logger = logger;   
 
-    public async Task SendNewRequestAdminNotificationAsync(string email, string? phone, IDictionary<string, string> userData)
+    public async Task SendNewRequestAdminNotificationAsync(string email, string zip, string name, string? phone, IDictionary<string, string>? userData)
     {
         const string templateId = "d-100c5b608f444eba95ad0198ac03c3fe"; // TODO: move to config (non-sensative)
         var templateData = new
         {
             userEmail = email,
             userPhone = phone,
+            userName = name,
+            userZip = zip,
             userData
         };
 

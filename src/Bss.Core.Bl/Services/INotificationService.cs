@@ -2,5 +2,5 @@
 
 public interface INotificationService
 {
-    Task SendNewRequestAdminNotificationAsync(string email, string? phone, IDictionary<string, string> userData);
+    Task SendNewRequestAdminNotificationAsync(string email, string zip, string name, string? phone, IDictionary<string, string>? userData);
 }
