@@ -15,6 +15,6 @@ public class RequestAssessmentHandler(ILogger<RequestAssessmentHandler> logger, 
             logger.LogWarning("RequestAssessmentHandler: MeasureValues is empty.");
         }
 
-        await notificationService.SendNewRequestAdminNotificationAsync(userContex.Email ?? "no_email", request.Phone, request.MeasureValues);
+        await notificationService.SendNewRequestAdminNotificationAsync(userContex.Email!, request.Phone, request.MeasureValues);
     }
 }
