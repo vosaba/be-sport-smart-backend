@@ -8,4 +8,5 @@ await Application.Run(
     typeof(Bss.UserValues.Module),
     typeof(Bss.Identity.Module),
     typeof(Bss.Dal.Module),
-    typeof(Bss.Dal.Migrations.Module));
+    typeof(Bss.Dal.Migrations.Module),
+    typeof(Bss.SendGrid.Module));

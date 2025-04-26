@@ -1,0 +1,8 @@
+{
+  "SendGrid": {
+    "ApiKey": "API_KEY",
+    "FromEmail": "FROM_EMAIL",
+    "FromName": "Be Sport Smart",
+    "AdminEmail": "ADMIN_EMAIL"
+  }
+}
